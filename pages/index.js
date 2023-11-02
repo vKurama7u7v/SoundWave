@@ -1,7 +1,13 @@
 import React from "react";
 
+import HomeScreen from "@/screens/Home/HomeScreen";
+
 function Index() {
-  return <div>index</div>;
+  return (
+    <>
+      <HomeScreen />
+    </>
+  );
 }
 
 export default Index;

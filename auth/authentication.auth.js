@@ -7,10 +7,10 @@ const commonParams = {
   client_secret: process.env.CLIENT_SECRET,
 };
 
-export const spotifyAuthCall = async (code) => {
+export const spotifyAuthCall = async (requiredParams) => {
   try {
     const params = {
-      code,
+      ...requiredParams,
       grant_type: "authorization_code",
       ...commonParams,
     };
@@ -21,8 +21,6 @@ export const spotifyAuthCall = async (code) => {
       )
       .join("&");
 
-    console.log(searchParams);
-
     const spotifyCall = await apiCall({
       method: "POST",
       url: "https://accounts.spotify.com/api/token",
@@ -30,7 +28,7 @@ export const spotifyAuthCall = async (code) => {
       headers: { "Content-type": "application/x-www-form-urlencoded" },
     });
 
-    console.log(await spotifyCall.json());
+    console.log(await spotifyCall);
     return await spotifyCall.json();
   } catch (error) {
     console.log("spotifyAuthCall:", error);

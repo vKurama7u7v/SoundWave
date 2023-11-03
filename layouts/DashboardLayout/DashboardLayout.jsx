@@ -1,7 +1,8 @@
 import React from "react";
+import AuthLayout from "../AuthLayout";
 
-function DashboardLayout() {
-  return <div>DashboardLayout</div>;
+function DashboardLayout({ children }) {
+  return <AuthLayout>{children}</AuthLayout>;
 }
 
 export default DashboardLayout;

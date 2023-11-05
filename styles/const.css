@@ -1,0 +1,89 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap');
+
+:root {
+
+    /*
+    DARK:
+    navbar: #282f36
+    dropdown: #181d21
+    hover: #191E22
+    card: #242A30
+    dark-bg: #191E22
+
+    h1-text-color: #CED4DA
+    h2-text-color: #E9E9EF
+    p-text-color: #858D98
+    */
+
+    /*
+    LIGHT:
+    navbar: #???
+    dropdown: #F8F9FA
+    hover: #191E22
+    card: #FFFFFF
+    light-bg: #F4F5F8
+    light-bg: #EFEFF4
+
+    h1-text-color: #495057
+    h2-text-color: #2B3940
+    p-text-color: #74788D
+    */
+
+    /*
+    primary-color: #4ECC48
+    purple: #643CFF
+    yellow: #F8BE48
+    red: #FF4D6D
+    blue: #0096c7
+    light-blue: #05C3FB
+    green: #38b000
+    orange: #FC7303
+    */
+
+    /* ====== COLORS ====== */
+    /* LIGHT */
+    --body-color: #EFEFF4;
+    --card-color: #FFFFFF;
+    --navbar-color: #FFFFFF;
+    --dropdown-color: #F8F9FA;
+    --hover-color: #f5f5f5;
+
+    --h1-texto-color: #495057;
+    --h2-texto-color: #2B3940;
+    --text-color: #74788D;
+
+    --primary-color: #4ECC48;
+
+    /* ====== FONTS ====== */
+    --FontIBMPrexSans: 'IBM Plex Sans', sans-serif;
+
+    /* ====== TRANSITION ====== */
+    --tran-03: all 0.2s ease;
+    --tran-03: all 0.3s ease;
+    --tran-04: all 0.3s ease;
+    --tran-05: all 0.3s ease;
+}
+
+.dark-mode {
+    --body-color: #191E22;
+    --card-color: #242A30;
+    --navbar-color: #242A30;
+    --dropdown-color: #181d21;
+    --hover-color: #191E22;
+
+    --h1-texto-color: #CED4DA;
+    --h2-texto-color: #E9E9EF;
+    --text-color: #858D98;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: 0;
+}
+
+body {
+    font-family: var(--FontIBMPrexSans);
+    transition: var(--tran-05);
+    background-color: var(--body-color);
+}

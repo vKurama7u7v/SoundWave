@@ -1,8 +1,6 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { useRouter } from "next/router";
 
-import jwtDecode from "jwt-decode";
-
 import AuthContext from "@/context/AuthContext.context";
 import {
   setToken,
@@ -10,10 +8,12 @@ import {
   removeToken,
   hasExpiredToken,
   setRefreshToken,
+  getTokenDecode,
 } from "@/auth/tokens.auth";
 
 import "@/styles/globals.css";
-import { getMeApi } from "@/api/user.api";
+import "@/styles/const.css";
+import "@/styles/import.css";
 
 export default function App({ Component, pageProps }) {
   const [auth, setAuth] = useState(undefined);
@@ -37,17 +37,18 @@ export default function App({ Component, pageProps }) {
     setReloadUser(false);
   }, [reloadUser]);
 
-  useEffect(() => {
-    (async () => {
-      if (auth) {
-        const response = await getMeApi(logout);
-        setUser(response);
-        setIsAuthenticated(true);
-      } else {
-        setIsAuthenticated(false);
-      }
-    })();
-  }, [auth]);
+  // useEffect(() => {
+  //   (async () => {
+  //     if (auth) {
+  //       const response = await getMeApi(logout);
+
+  //       setUser(response);
+  //       setIsAuthenticated(true);
+  //     } else {
+  //       setIsAuthenticated(false);
+  //     }
+  //   })();
+  // }, [auth]);
 
   const login = (access_token, refresh_token) => {
     setToken(access_token);

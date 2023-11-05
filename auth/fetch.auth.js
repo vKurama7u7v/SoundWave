@@ -1,33 +1,38 @@
-import { getToken, hasExpiredToken } from "./tokens.auth";
+import jwt from "jsonwebtoken";
+
+import { getToken, getTokenDecode, hasExpiredToken } from "./tokens.auth";
 
 export async function authFetch(url, params, logout) {
-  const token = getToken();
+  let token = getToken();
 
   if (!token) {
     // Usuario no logueado
     logout();
   } else {
     // Token valido
-    if (false) {
+    if (hasExpiredToken(token)) {
       // Token Caducado (return true)
       logout();
     } else {
+      token = jwt.decode(token);
       // Token valido
-      const paramsTemp = {
-        ...params,
-        headers: {
-          ...params?.headers,
-          Authorization: `Bearer ${token.access_token}`,
-        },
-      };
+      if (token.access_token) {
+        const paramsTemp = {
+          ...params,
+          headers: {
+            ...params?.headers,
+            Authorization: `Bearer ${token.access_token}`,
+          },
+        };
 
-      try {
-        const response = await fetch(url, paramsTemp);
-        const result = await response.json();
-        return result;
-      } catch (error) {
-        console.log(error);
-        return error;
+        try {
+          const response = await fetch(url, paramsTemp);
+          const result = await response.json();
+          return result;
+        } catch (error) {
+          console.log(error);
+          return error;
+        }
       }
     }
   }

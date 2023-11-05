@@ -1,7 +1,9 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import useAuth from "@/hooks/useAuth";
 
+import sign from "jwt-encode";
+
+import useAuth from "@/hooks/useAuth";
 import { SPOTIFY_AUTH_URL } from "@/utils/const.utils";
 import { spotifyAuthCall } from "@/auth/authentication.auth";
 
@@ -13,22 +15,28 @@ function HomeScreen() {
 
   const authenticateUser = async (code) => {
     setLoading(true);
-    const response = await spotifyAuthCall({ code: code });
+    const response = await spotifyAuthCall({
+      code: code,
+      grant_type: "authorization_code",
+    });
 
     // Si no hay repuesta
     if (!response) setLoading(false);
 
     // Confirmando token
     if (response.access_token) {
-      console.log(response);
+      // Codificando token
+      const access_token = sign(
+        {
+          access_token: response.access_token,
+          exp: Math.floor(Date.now() / 1000) + 60 * 60,
+          token_type: response.token_type,
+        },
+        "secret"
+      );
 
-      const token = {
-        access_token: response.access_token,
-        expires_in: response.expires_in,
-        token_type: response.token_type,
-      };
-
-      login(token, response.refresh_token);
+      // Enviando tokens
+      login(access_token, response.refresh_token);
       router.push("/auth");
     }
     setLoading(false);

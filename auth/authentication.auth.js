@@ -11,7 +11,6 @@ export const spotifyAuthCall = async (requiredParams) => {
   try {
     const params = {
       ...requiredParams,
-      grant_type: "authorization_code",
       ...commonParams,
     };
 

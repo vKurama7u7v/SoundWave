@@ -1,19 +1,21 @@
-import React, { useEffect } from "react";
-import { useRecoilState } from "recoil";
-import { isAuthenticated } from "@/auth/atoms.auth";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+
+import useAuth from "@/hooks/useAuth";
+import { getMeApi } from "@/api/user.api";
 
 function AuthLayout({ children }) {
   const router = useRouter();
 
-  const [isAuth, setIsAuth] = useRecoilState(isAuthenticated);
-  console.log(isAuth);
+  const { auth, logout } = useAuth();
 
   useEffect(() => {
-    if (!isAuth) {
-      router.push("/");
-    }
-  }, []);
+    (async () => {
+      if (!auth) {
+        router.push("/");
+      }
+    })();
+  }, [auth]);
 
   return <>{children}</>;
 }

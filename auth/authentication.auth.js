@@ -28,7 +28,7 @@ export const spotifyAuthCall = async (requiredParams) => {
       headers: { "Content-type": "application/x-www-form-urlencoded" },
     });
 
-    console.log(await spotifyCall);
+    // console.log("spotifyAuthCall", await spotifyCall);
     return await spotifyCall.json();
   } catch (error) {
     console.log("spotifyAuthCall:", error);

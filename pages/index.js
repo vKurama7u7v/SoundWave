@@ -2,7 +2,7 @@ import React from "react";
 
 import HomeScreen from "@/screens/Home/HomeScreen";
 
-function Index() {
+function Index(props) {
   return (
     <>
       <HomeScreen />

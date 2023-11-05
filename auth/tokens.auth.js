@@ -1,12 +1,16 @@
-import { TOKEN } from "@/utils/const.utils";
+import { REFRESH_TOKEN, TOKEN } from "@/utils/const.utils";
 import jwtDecode from "jwt-decode";
 
 export function setToken(token) {
-  localStorage.setItem(TOKEN, token);
+  localStorage.setItem(TOKEN, JSON.stringify({ value: token }));
+}
+
+export function setRefreshToken(token) {
+  localStorage.setItem(REFRESH_TOKEN, token);
 }
 
 export function getToken() {
-  return localStorage.getItem(TOKEN);
+  return JSON.parse(localStorage.getItem(TOKEN))?.value ?? null;
 }
 
 export function removeToken() {

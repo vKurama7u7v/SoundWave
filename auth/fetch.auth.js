@@ -8,7 +8,7 @@ export async function authFetch(url, params, logout) {
     logout();
   } else {
     // Token valido
-    if (hasExpiredToken(token)) {
+    if (false) {
       // Token Caducado (return true)
       logout();
     } else {
@@ -17,7 +17,7 @@ export async function authFetch(url, params, logout) {
         ...params,
         headers: {
           ...params?.headers,
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token.access_token}`,
         },
       };
 

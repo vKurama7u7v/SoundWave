@@ -48,6 +48,8 @@ function HomeScreen() {
 
   return (
     <div>
+      <h1 className="text-3xl font-bold underline">Add TailwindCSS</h1>
+
       <button onClick={handleLoginClick}>Sign In</button>
     </div>
   );

@@ -10,31 +10,7 @@ function DashboardLayout({ children }) {
   const [isActive, setIsActive] = useState(false);
   const [mode, setMode] = useState(false);
 
-  const [user, setUser] = useState(undefined);
-
-  const { auth, logout } = useAuth();
-
-  // useEffect(() => {
-  //   (async () => {
-  //     if (auth) {
-  //       const response = await getMeApi(logout);
-
-  //       setUser(response);
-  //       setIsAuthenticated(true);
-  //     } else {
-  //       setIsAuthenticated(false);
-  //     }
-  //   })();
-  // }, [auth]);
-
-  useEffect(() => {
-    (async () => {
-      if (auth) {
-        const response = await getMeApi(logout);
-        setUser(response);
-      }
-    })();
-  }, [auth]);
+  const { auth, logout, data_user } = useAuth();
 
   const onSetActive = () => {
     setIsActive(!isActive);
@@ -55,7 +31,7 @@ function DashboardLayout({ children }) {
             onSetActive={onSetActive}
             mode={mode}
             onSetMode={onSetMode}
-            user={user}
+            user={data_user}
           />
           <>{children}</>
         </section>

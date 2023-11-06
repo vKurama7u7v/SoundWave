@@ -1,0 +1,4 @@
+.card__item {
+    background: var(--card-color);
+    min-height: 180px;
+}

@@ -1,6 +1,6 @@
 // SPOTIFY AUTH
 export const SPOTIFY_CALLBACK_HOST =
-  "https://soundwaveio.vercel.app/" || "http://localhost:3000/";
+  "http://localhost:3000/" || "https://soundwaveio.vercel.app/";
 export const SPOTIFY_AUTH_URL = `https://accounts.spotify.com/authorize?client_id=${process.env.CLIENT_ID}&response_type=code&redirect_uri=${SPOTIFY_CALLBACK_HOST}&scope=user-read-private`;
 
 // AUTH LOCALSTORAGE

@@ -14,41 +14,37 @@ import {
 import "@/styles/globals.css";
 import "@/styles/const.css";
 import "@/styles/import.css";
+import { getMeApi } from "@/api/user.api";
 
 export default function App({ Component, pageProps }) {
-  const [auth, setAuth] = useState(undefined);
+  const [auth, setAuth] = useState(null);
   const [reloadUser, setReloadUser] = useState(false);
+  const [reloadDataUser, setReloadDataUser] = useState(false);
 
-  const [user, setUser] = useState(undefined);
+  const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const router = useRouter();
 
   useEffect(() => {
     const token = getToken();
+
     if (token) {
       setAuth({
         token,
       });
+
+      (async () => {
+        const response = await getMeApi(logout);
+        console.log("USER:", response);
+        setUser(response);
+      })();
     } else {
       setAuth(null);
     }
 
     setReloadUser(false);
   }, [reloadUser]);
-
-  // useEffect(() => {
-  //   (async () => {
-  //     if (auth) {
-  //       const response = await getMeApi(logout);
-
-  //       setUser(response);
-  //       setIsAuthenticated(true);
-  //     } else {
-  //       setIsAuthenticated(false);
-  //     }
-  //   })();
-  // }, [auth]);
 
   const login = (access_token, refresh_token) => {
     setToken(access_token);
@@ -69,6 +65,7 @@ export default function App({ Component, pageProps }) {
   const authData = useMemo(
     () => ({
       auth: auth,
+      data_user: user,
       login: login,
       logout: logout,
       setReloadUser: setReloadUser,
@@ -81,12 +78,7 @@ export default function App({ Component, pageProps }) {
   }
   return (
     <AuthContext.Provider value={authData}>
-      {/* <DebugObserver /> */}
-      <Component
-        {...pageProps}
-        isAuthenticated={isAuthenticated}
-        user_data={user}
-      />
+      <Component {...pageProps} />
     </AuthContext.Provider>
   );
 }

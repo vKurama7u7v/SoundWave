@@ -1,10 +1,14 @@
+@import url("../CardLayout/cardlayout.styles.css");
+
 @import url("../../components/SideBar/sidebar.styles.css");
 @import url("../../components/TopBar/topbar.styles.css");
 
 .home {
+    background: var(--body-color);
     position: absolute;
     top: 0;
-    top: 0;
+    right: 0;
+    bottom: 0;
     left: 250px;
     height: 100vh;
     width: calc(100% - 250px);

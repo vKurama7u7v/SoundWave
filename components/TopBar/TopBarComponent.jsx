@@ -9,7 +9,6 @@ function TopBarComponent(props) {
     setIsOpen(!isOpen);
   };
 
-  console.log(user);
   return (
     <>
       <header className="topbar">

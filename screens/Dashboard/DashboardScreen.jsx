@@ -17,6 +17,7 @@ import useAuth from "@/hooks/useAuth";
 import CardProfileSection from "@/sections/Dashboard/CardProfileSection";
 import CardTitleComponent from "@/components/Titles/CardTitleComponent";
 import CardDropdownComponent from "@/components/Dropdowns/CardDropdownComponent";
+import SongsTableComponent from "@/components/Tables/SongsTableComponent";
 
 ChartJS.register(...registerables);
 
@@ -281,8 +282,45 @@ function DashboardScreen() {
               <Bar data={dataBar} options={optionsBar} />
             </div>
           </CardLayout>
-          <CardLayout>hola 4</CardLayout>
+
           <CardLayout>hola 5</CardLayout>
+
+          <CardLayout>hola 6</CardLayout>
+
+          {/* Tabla */}
+          <CardLayout custom="col-span-3">
+            <CardTitleComponent>
+              <div class="flex items-center gap-x-2">
+                <div class="inline-flex justify-center items-center w-10 h-10 rounded-full border-4 border-esmerald-50 bg-esmerald-100">
+                  <i class="uil uil-music text-esmerald-500 text-2xl"></i>
+                </div>
+                <h3 class="text-base font-medium text-gray-800">Top</h3>
+              </div>
+
+              <CardDropdownComponent>
+                <a
+                  href="#"
+                  class="block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-300 transform  hover:bg-gray-100 "
+                >
+                  Songs
+                </a>
+                <a
+                  href="#"
+                  class="block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-300 transform  hover:bg-gray-100 "
+                >
+                  Artists
+                </a>
+                <a
+                  href="#"
+                  class="block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-300 transform  hover:bg-gray-100 "
+                >
+                  Genres
+                </a>
+              </CardDropdownComponent>
+            </CardTitleComponent>
+
+            <SongsTableComponent />
+          </CardLayout>
         </GridLayout>
       </section>
     </>

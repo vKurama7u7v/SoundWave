@@ -76,7 +76,7 @@ function TopBarComponent(props) {
                         <div class="font-medium text-gray-700">
                           {user ? user.display_name : <></>}
                         </div>
-                        <div class="text-gray-400">
+                        <div class="text-gray-400 capitalize">
                           {user ? user.product : <></>}
                         </div>
                       </div>

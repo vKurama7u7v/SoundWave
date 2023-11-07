@@ -35,9 +35,11 @@ export default function App({ Component, pageProps }) {
       });
 
       (async () => {
-        const response = await getMeApi(logout);
-        console.log("USER:", response);
-        setUser(response);
+        if (!user) {
+          const response = await getMeApi(logout);
+          console.log("USER:", response);
+          setUser(response);
+        }
       })();
     } else {
       setAuth(null);

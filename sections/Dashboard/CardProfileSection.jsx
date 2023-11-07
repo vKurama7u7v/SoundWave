@@ -1,25 +1,38 @@
-import useAuth from "@/hooks/useAuth";
 import React from "react";
+
+import useAuth from "@/hooks/useAuth";
+
+import CardTitleComponent from "@/components/Titles/CardTitleComponent";
+import CardDropdownComponent from "@/components/Dropdowns/CardDropdownComponent";
 
 function CardProfileSection() {
   const { data_user } = useAuth();
 
   return (
     <>
-      <div class="flex items-center gap-x-4 mb-5">
-        <div class="inline-flex justify-center items-center w-10 h-10 rounded-full border-4 border-blue-50 bg-blue-100">
-          <i class="uil uil-user-circle text-blue-600 text-2xl"></i>
-        </div>
-        <div class="flex-shrink-0">
-          <h3 class="block text-lg font-medium text-gray-800 ">
+      <CardTitleComponent>
+        <div class="flex items-center gap-x-2">
+          <div class="inline-flex justify-center items-center w-10 h-10 rounded-full border-4 border-esmerald-50 bg-esmerald-100">
+            <i class="uil uil-user-circle text-esmerald-500 text-2xl"></i>
+          </div>
+          <h3 class="text-base font-medium text-gray-800">
             Bienvenido{" "}
-            <span className="font-bold">
+            <span className="font-bold text-esmerald-500 ">
               {data_user ? data_user.display_name : <></>}
             </span>
             ! 🎉
           </h3>
         </div>
-      </div>
+
+        <CardDropdownComponent>
+          <a
+            href="#"
+            class="block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-300 transform  hover:bg-gray-100 "
+          >
+            Option
+          </a>
+        </CardDropdownComponent>
+      </CardTitleComponent>
 
       <div class="flex flex-col items-center">
         <img
@@ -30,9 +43,10 @@ function CardProfileSection() {
         <h5 class="mb-1 text-xl font-medium text-gray-900 ">
           {data_user ? data_user.display_name : <></>}
         </h5>
-        <span class="text-sm text-gray-500 capitalize">
+        <p class="text-sm text-gray-500 capitalize">
           {data_user ? data_user.product : <></>}
-        </span>
+        </p>
+        <p class="text-sm text-gray-500">{data_user ? data_user.id : <></>}</p>
 
         <p className="">{data_user ? data_user.followers.total : 0}</p>
 

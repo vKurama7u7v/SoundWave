@@ -58,8 +58,8 @@ function TopBarComponent(props) {
                   id="dropdown-profile"
                   class={
                     isOpen
-                      ? "absolute right-0 z-10 mt-2 w-52 divide-y divide-gray-100 rounded-lg border border-gray-100 bg-white text-left text-sm shadow-lg visible"
-                      : "absolute right-0 z-10 mt-2 w-52 divide-y divide-gray-100 rounded-lg border border-gray-100 bg-white text-left text-sm shadow-lg"
+                      ? "absolute right-0 z-40 mt-2 w-52 divide-y divide-gray-100 rounded-lg border border-gray-100 bg-white text-left text-sm shadow-lg visible"
+                      : "absolute right-0 z-40 mt-2 w-52 divide-y divide-gray-100 rounded-lg border border-gray-100 bg-white text-left text-sm shadow-lg"
                   }
                 >
                   <div class="py-3 px-4">

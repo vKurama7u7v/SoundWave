@@ -9,15 +9,17 @@ import { getMeApi } from "@/api/user.api";
 function DashboardLayout({ children }) {
   const [isActive, setIsActive] = useState(false);
   const [mode, setMode] = useState(false);
-  const [user, setUser] = useState(false);
+  const [user, setUser] = useState(null);
 
   const { auth, logout, data_user } = useAuth();
 
   // useEffect(() => {
-  //   if (auth) {
-  //     setUser(user);
+  //   if (!user) {
+  //     setUser(data_user);
+  //     console.log(data_user);
+  //     console.log(user);
   //   }
-  // }, [auth, data_user]);
+  // }, [data_user]);
 
   const onSetActive = () => {
     setIsActive(!isActive);

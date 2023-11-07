@@ -6,8 +6,11 @@ import {
   Tooltip,
   Legend,
   Colors,
+  CategoryScale,
+  LinearScale,
+  registerables,
 } from "chart.js";
-import { Doughnut } from "react-chartjs-2";
+import { Doughnut, Bar } from "react-chartjs-2";
 import CardLayout from "@/layouts/CardLayout";
 import GridLayout from "@/layouts/GridLayout";
 import useAuth from "@/hooks/useAuth";
@@ -15,7 +18,7 @@ import CardProfileSection from "@/sections/Dashboard/CardProfileSection";
 import CardTitleComponent from "@/components/Titles/CardTitleComponent";
 import CardDropdownComponent from "@/components/Dropdowns/CardDropdownComponent";
 
-ChartJS.register(ArcElement, Tooltip, Legend, Colors);
+ChartJS.register(...registerables);
 
 function DashboardScreen() {
   const { data_user } = useAuth();
@@ -94,13 +97,79 @@ function DashboardScreen() {
     maintainAspectRatio: false,
   };
 
+  const dataBar = {
+    labels: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio"],
+    datasets: [
+      {
+        label: "My First Dataset",
+        data: [65, 59, 80, 81, 56, 55, 40],
+        backgroundColor: [
+          "rgba(255, 99, 132)",
+          "rgba(255, 159, 64)",
+          "rgba(255, 205, 86)",
+          "rgba(75, 192, 192)",
+          "rgba(54, 162, 235)",
+          "rgba(153, 102, 255)",
+          "rgba(201, 203, 207)",
+        ],
+        borderColor: [
+          "rgb(255, 99, 132)",
+          "rgb(255, 159, 64)",
+          "rgb(255, 205, 86)",
+          "rgb(75, 192, 192)",
+          "rgb(54, 162, 235)",
+          "rgb(153, 102, 255)",
+          "rgb(201, 203, 207)",
+        ],
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  const optionsBar = {
+    plugins: {
+      legend: {
+        display: false,
+        position: "left",
+      },
+      colors: {
+        enabled: true,
+      },
+    },
+    responsive: true,
+    maintainAspectRatio: false,
+  };
+
   return (
     <>
-      <section className="dashboard__kpis m-6 xl:m-10">
+      <section className="dashboard__kpis m-6  xl:mx-10">
+        <div className="flex justify-between">
+          <h1 className="text-xl font-semibold text-gray-600 capitalize">
+            Dashboard
+          </h1>
+          {/* Breadrumbs */}
+          <div class="flex items-center pb-6 overflow-x-auto whitespace-nowrap">
+            <a href="#" class="text-gray-600 ">
+              <i class="uil uil-estate text-lg"></i>
+            </a>
+
+            <span class="mx-2 text-gray-500 ">
+              <i class="uil uil-angle-right text-lg"></i>
+            </span>
+
+            <a href="#" class="text-esmerald-500 font-medium">
+              Dashboard
+            </a>
+          </div>
+        </div>
+
         <GridLayout>
-          <CardLayout custom="row-span-2">
+          {/*  */}
+          <CardLayout custom="">
             <CardProfileSection />
           </CardLayout>
+
+          {/* Mood Meter */}
           <CardLayout custom="">
             <CardTitleComponent>
               <div class="flex items-center gap-x-2">
@@ -115,19 +184,19 @@ function DashboardScreen() {
                   href="#"
                   class="block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-300 transform  hover:bg-gray-100 "
                 >
-                  Last 4 Weeks
+                  Short Term
                 </a>
                 <a
                   href="#"
                   class="block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-300 transform  hover:bg-gray-100 "
                 >
-                  6 Months
+                  Medium Term
                 </a>
                 <a
                   href="#"
                   class="block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-300 transform  hover:bg-gray-100 "
                 >
-                  All
+                  Long Term
                 </a>
               </CardDropdownComponent>
             </CardTitleComponent>
@@ -136,7 +205,82 @@ function DashboardScreen() {
               <Doughnut data={data} options={options} />
             </div>
           </CardLayout>
-          <CardLayout>hola 3</CardLayout>
+
+          {/* Generos Musicales */}
+          <CardLayout custom="">
+            <CardTitleComponent>
+              <div class="flex items-center gap-x-2">
+                <div class="inline-flex justify-center items-center w-10 h-10 rounded-full border-4 border-esmerald-50 bg-esmerald-100">
+                  <i class="uil uil-headphones text-esmerald-500 text-2xl"></i>
+                </div>
+                <h3 class="text-base font-medium text-gray-800">
+                  Generos Musicales
+                </h3>
+              </div>
+
+              <CardDropdownComponent>
+                <a
+                  href="#"
+                  class="block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-300 transform  hover:bg-gray-100 "
+                >
+                  Short Term
+                </a>
+                <a
+                  href="#"
+                  class="block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-300 transform  hover:bg-gray-100 "
+                >
+                  Medium Term
+                </a>
+                <a
+                  href="#"
+                  class="block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-300 transform  hover:bg-gray-100 "
+                >
+                  Long Term
+                </a>
+              </CardDropdownComponent>
+            </CardTitleComponent>
+
+            <div style={{ width: "100%" }}>
+              <Doughnut data={data} options={options} />
+            </div>
+          </CardLayout>
+
+          {/* Analisis */}
+          <CardLayout>
+            <CardTitleComponent>
+              <div class="flex items-center gap-x-2">
+                <div class="inline-flex justify-center items-center w-10 h-10 rounded-full border-4 border-esmerald-50 bg-esmerald-100">
+                  <i class="uil uil-analysis text-esmerald-500 text-2xl"></i>
+                </div>
+                <h3 class="text-base font-medium text-gray-800">Analisis</h3>
+              </div>
+
+              <CardDropdownComponent>
+                <a
+                  href="#"
+                  class="block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-300 transform  hover:bg-gray-100 "
+                >
+                  Short Term
+                </a>
+                <a
+                  href="#"
+                  class="block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-300 transform  hover:bg-gray-100 "
+                >
+                  Medium Term
+                </a>
+                <a
+                  href="#"
+                  class="block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-300 transform  hover:bg-gray-100 "
+                >
+                  Long Term
+                </a>
+              </CardDropdownComponent>
+            </CardTitleComponent>
+
+            <div style={{ width: "100%" }}>
+              <Bar data={dataBar} options={optionsBar} />
+            </div>
+          </CardLayout>
           <CardLayout>hola 4</CardLayout>
           <CardLayout>hola 5</CardLayout>
         </GridLayout>

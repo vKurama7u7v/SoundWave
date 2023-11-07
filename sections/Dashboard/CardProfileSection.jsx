@@ -23,41 +23,35 @@ function CardProfileSection() {
             ! 🎉
           </h3>
         </div>
-
-        <CardDropdownComponent>
-          <a
-            href="#"
-            class="block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-300 transform  hover:bg-gray-100 "
-          >
-            Option
-          </a>
-        </CardDropdownComponent>
       </CardTitleComponent>
 
-      <div class="flex flex-col items-center">
-        <img
-          class="w-24 h-24 mb-3 rounded-full shadow-lg"
-          src={data_user ? data_user.images[1].url : ""}
-          alt="Bonnie image"
-        />
-        <h5 class="mb-1 text-xl font-medium text-gray-900 ">
-          {data_user ? data_user.display_name : <></>}
-        </h5>
-        <p class="text-sm text-gray-500 capitalize">
-          {data_user ? data_user.product : <></>}
-        </p>
-        <p class="text-sm text-gray-500">{data_user ? data_user.id : <></>}</p>
-
-        <p className="">{data_user ? data_user.followers.total : 0}</p>
-
-        <div class="flex mt-4 space-x-3 md:mt-6">
-          <a
-            href={data_user ? data_user.external_urls.spotify : ""}
-            target="_blank"
-            class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 "
-          >
-            Ver Perfil
-          </a>
+      <div class="flex items-center gap-5">
+        <div className="flex  items-center justify-center">
+          <img
+            class="w-28 h-28 rounded-full shadow-lg"
+            src={data_user ? data_user.images[1].url : ""}
+            alt="Bonnie image"
+          />
+        </div>
+        <div className="flex flex-col items-start">
+          <h5 class="mb-1 text-xl font-medium text-gray-900 ">
+            {data_user ? data_user.display_name : <></>}
+          </h5>
+          <p class="text-sm text-gray-500 capitalize">
+            {data_user ? data_user.product : <></>}
+          </p>
+          <p class="text-sm text-gray-500">
+            {data_user ? data_user.id : <></>}
+          </p>
+          <div class="flex mt-3 space-x-3 ">
+            <a
+              href={data_user ? data_user.external_urls.spotify : ""}
+              target="_blank"
+              class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 "
+            >
+              Ver Perfil
+            </a>
+          </div>
         </div>
       </div>
     </>

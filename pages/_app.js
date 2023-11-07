@@ -33,20 +33,22 @@ export default function App({ Component, pageProps }) {
       setAuth({
         token,
       });
-
-      (async () => {
-        if (!user) {
-          const response = await getMeApi(logout);
-          console.log("USER:", response);
-          setUser(response);
-        }
-      })();
     } else {
       setAuth(null);
     }
 
     setReloadUser(false);
   }, [reloadUser]);
+
+  useEffect(() => {
+    (async () => {
+      if (!user) {
+        const response = await getMeApi(logout);
+        console.log("USER:", response);
+        setUser(response);
+      }
+    })();
+  }, [auth]);
 
   const login = (access_token, refresh_token) => {
     setToken(access_token);
@@ -72,7 +74,7 @@ export default function App({ Component, pageProps }) {
       logout: logout,
       setReloadUser: setReloadUser,
     }),
-    [auth]
+    [auth, user]
   );
 
   if (auth === undefined) {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 import {
   Chart as ChartJS,
@@ -18,11 +18,27 @@ import CardProfileSection from "@/sections/Dashboard/CardProfileSection";
 import CardTitleComponent from "@/components/Titles/CardTitleComponent";
 import CardDropdownComponent from "@/components/Dropdowns/CardDropdownComponent";
 import SongsTableComponent from "@/components/Tables/SongsTableComponent";
+import { getMyTopTracks } from "@/api/user.api";
 
 ChartJS.register(...registerables);
 
 function DashboardScreen() {
-  const { data_user } = useAuth();
+  const [topTracks, setTopTracks] = useState(null);
+
+  const { auth, data_user, logout } = useAuth();
+
+  useEffect(() => {
+    (async () => {
+      if (data_user) {
+        const response = await getMyTopTracks(
+          logout,
+          "?limit=50&offset=0&time_range=short_term"
+        );
+        setTopTracks(response);
+        console.log(topTracks);
+      }
+    })();
+  }, [data_user]);
 
   const colors = [
     "rgba(255, 99, 132)",
@@ -319,7 +335,7 @@ function DashboardScreen() {
               </CardDropdownComponent>
             </CardTitleComponent>
 
-            <SongsTableComponent />
+            <SongsTableComponent data={topTracks} />
           </CardLayout>
         </GridLayout>
       </section>

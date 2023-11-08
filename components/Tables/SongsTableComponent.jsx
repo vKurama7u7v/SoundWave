@@ -1,6 +1,16 @@
 import React from "react";
 
-function SongsTableComponent() {
+import { map, size } from "lodash";
+
+function SongsTableComponent(props) {
+  const { data } = props;
+
+  if (!data) {
+    return null;
+  }
+
+  const { items } = data;
+  console.log(items);
   return (
     <>
       <section class="container pt-6">
@@ -78,51 +88,87 @@ function SongsTableComponent() {
                     </tr>
                   </thead>
                   <tbody class="bg-white divide-y divide-gray-200 ">
-                    <tr>
-                      <td class="px-4 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
-                        <div class="inline-flex items-center gap-x-3">
-                          <span>1</span>
-                        </div>
-                      </td>
+                    {!items ? (
+                      <tr>No hay nd</tr>
+                    ) : (
+                      <>
+                        {size(items) == 0 ? (
+                          <>Array Vacio</>
+                        ) : (
+                          <>
+                            {items.map((item, index) => (
+                              <>
+                                <tr>
+                                  <td class="px-4 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
+                                    <div class="inline-flex items-center gap-x-3">
+                                      <span>{index + 1}</span>
+                                    </div>
+                                  </td>
 
-                      <td class="px-4 pl-0 py-4 text-sm text-gray-500 whitespace-nowrap">
-                        <div class="flex items-center gap-x-2">
-                          <img
-                            class="object-cover w-10 h-10 rounded"
-                            src="https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/4e/85/c5/4e85c536-e32c-7826-cb51-cdf168d06722/4580684120233.jpg/600x600bf-60.jpg"
-                            alt=""
-                          />
-                          <div>
-                            <h2 class="text-sm font-medium text-gray-800">
-                              Togenkyo To Taxi
-                            </h2>
-                            <p class="text-xs font-normal text-gray-600 ">
-                              Mega Shinnosuke
-                            </p>
-                          </div>
-                        </div>
-                      </td>
-                      <td class="px-4 py-4 text-sm text-gray-500 whitespace-nowrap">
-                        A Head Full Of Dreams
-                      </td>
-                      <td class="px-4 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
-                        <div class="inline-flex items-center px-3 py-1 rounded-full gap-x-2 text-emerald-500 bg-emerald-100/60 ">
-                          <h2 class="text-sm font-normal">Rock</h2>
-                        </div>
-                      </td>
+                                  <td class="px-4 pl-0 py-4 text-sm text-gray-500 whitespace-nowrap">
+                                    <div class="flex items-center gap-x-2">
+                                      <img
+                                        class="object-cover w-10 h-10 rounded"
+                                        src={
+                                          item.album
+                                            ? item.album.images[0].url
+                                            : ""
+                                        }
+                                        alt=""
+                                      />
+                                      <div>
+                                        <h2 class="text-sm font-medium text-gray-800">
+                                          {item.name ? item.name : ""}
+                                        </h2>
+                                        <p class="text-xs font-normal text-gray-600 ">
+                                          {size(item.artists) == 0 ? (
+                                            <>N/A</>
+                                          ) : (
+                                            item.artists.map((artist) => (
+                                              <>{artist.name}</>
+                                            ))
+                                          )}
+                                        </p>
+                                      </div>
+                                    </div>
+                                  </td>
+                                  <td class="px-4 py-4 text-sm text-gray-500 whitespace-nowrap">
+                                    {item.album ? item.album.name : ""}
+                                  </td>
+                                  <td class="px-4 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
+                                    <div class="inline-flex items-center px-3 py-1 rounded-full gap-x-2 text-emerald-500 bg-emerald-100/60 ">
+                                      <h2 class="text-sm font-normal">Rock</h2>
+                                    </div>
+                                  </td>
 
-                      <td class="px-4 py-4 text-sm text-gray-500 whitespace-nowrap">
-                        <div class="flex items-center gap-x-6">
-                          <button class="text-gray-500 transition-colors duration-200 hover:text-indigo-500 focus:outline-none">
-                            Archive
-                          </button>
+                                  <td class="px-4 py-4 text-sm text-gray-500 whitespace-nowrap">
+                                    <div class="flex items-center gap-x-6">
+                                      <button class="text-gray-500 transition-colors duration-200 hover:text-indigo-500 focus:outline-none">
+                                        Archive
+                                      </button>
 
-                          <button class="text-blue-500 transition-colors duration-200 hover:text-indigo-500 focus:outline-none">
-                            Download
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
+                                      {item.preview_url == "" ? (
+                                        <></>
+                                      ) : (
+                                        <>
+                                          <a
+                                            href={item.preview_url}
+                                            target="_blank"
+                                            class="text-blue-500 transition-colors duration-200 hover:text-indigo-500 focus:outline-none"
+                                          >
+                                            Download
+                                          </a>
+                                        </>
+                                      )}
+                                    </div>
+                                  </td>
+                                </tr>
+                              </>
+                            ))}
+                          </>
+                        )}
+                      </>
+                    )}
                   </tbody>
                 </table>
               </div>

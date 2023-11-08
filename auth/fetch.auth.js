@@ -30,7 +30,7 @@ export async function authFetch(url, params, logout) {
           const result = await response.json();
           return result;
         } catch (error) {
-          console.log(error);
+          console.log("asdw", error);
           return error;
         }
       }

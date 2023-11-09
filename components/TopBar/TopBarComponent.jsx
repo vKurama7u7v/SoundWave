@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { size } from "lodash";
 
 function TopBarComponent(props) {
   const { user, isActive, onSetActive, mode, onSetMode } = props;
@@ -45,7 +46,15 @@ function TopBarComponent(props) {
                     <div class="relative h-10 w-10">
                       <img
                         class="h-full w-full rounded-full object-cover object-center ring ring-white"
-                        src={user ? user.images[1].url : ""}
+                        src={
+                          user ? (
+                            <>
+                              {size(user.images) > 0 ? user.images[1].url : ""}
+                            </>
+                          ) : (
+                            ""
+                          )
+                        }
                         alt=""
                       />
                       <span class="absolute right-0 bottom-0 h-2 w-2 rounded-full bg-green-400 ring ring-white"></span>
@@ -67,7 +76,17 @@ function TopBarComponent(props) {
                       <div class="relative h-10 w-10">
                         <img
                           class="h-full w-full rounded-full object-cover object-center ring ring-white"
-                          src={user ? user.images[1].url : ""}
+                          src={
+                            user ? (
+                              <>
+                                {size(user.images) > 0
+                                  ? user.images[1].url
+                                  : ""}
+                              </>
+                            ) : (
+                              ""
+                            )
+                          }
                           alt=""
                         />
                         <span class="absolute right-0 bottom-0 h-2 w-2 rounded-full bg-green-400 ring ring-white"></span>

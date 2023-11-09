@@ -1,4 +1,5 @@
 import React from "react";
+import { size } from "lodash";
 
 import useAuth from "@/hooks/useAuth";
 
@@ -29,7 +30,13 @@ function CardProfileSection() {
         <div className="flex  items-center justify-center">
           <img
             class="w-28 h-28 rounded-full shadow-lg"
-            src={data_user ? data_user.images[1].url : ""}
+            src={
+              data_user ? (
+                <>{size(data_user.images) > 0 ? data_user.images[1].url : ""}</>
+              ) : (
+                ""
+              )
+            }
             alt="Bonnie image"
           />
         </div>

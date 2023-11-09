@@ -1,16 +1,16 @@
 import React from "react";
 
 import { map, size } from "lodash";
+import { getMoodTrack } from "@/utils/mood-meter.utils";
 
 function SongsTableComponent(props) {
-  const { data } = props;
+  const { data, features } = props;
 
   if (!data) {
     return null;
   }
 
-  const { items } = data;
-  console.log(items);
+  const items = data;
   return (
     <>
       <section class="container pt-6">
@@ -18,7 +18,7 @@ function SongsTableComponent(props) {
           <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
               <div class="overflow-hidden border border-gray-200 md:rounded-lg">
-                <table class="min-w-full divide-y divide-gray-200 ">
+                <table class="min-w-full divide-y divide-gray-200 overflow-x-scroll">
                   <thead class="bg-gray-50 ">
                     <tr>
                       <th
@@ -134,19 +134,32 @@ function SongsTableComponent(props) {
                                   </td>
                                   <td class="px-4 py-4 text-sm text-gray-500 whitespace-nowrap">
                                     {item.album ? item.album.name : ""}
+                                    <br />
+                                    {item.id ? item.id : ""}
                                   </td>
                                   <td class="px-4 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
                                     <div class="inline-flex items-center px-3 py-1 rounded-full gap-x-2 text-emerald-500 bg-emerald-100/60 ">
-                                      <h2 class="text-sm font-normal">Rock</h2>
+                                      <h2 class="text-sm font-normal">
+                                        {features ? (
+                                          <>
+                                            {
+                                              getMoodTrack(
+                                                features.audio_features[index]
+                                                  .energy,
+                                                features.audio_features[index]
+                                                  .valence
+                                              ).emotion
+                                            }
+                                          </>
+                                        ) : (
+                                          ""
+                                        )}
+                                      </h2>
                                     </div>
                                   </td>
 
                                   <td class="px-4 py-4 text-sm text-gray-500 whitespace-nowrap">
                                     <div class="flex items-center gap-x-6">
-                                      <button class="text-gray-500 transition-colors duration-200 hover:text-indigo-500 focus:outline-none">
-                                        Archive
-                                      </button>
-
                                       {item.preview_url == "" ? (
                                         <></>
                                       ) : (

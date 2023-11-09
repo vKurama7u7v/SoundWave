@@ -18,27 +18,40 @@ import CardProfileSection from "@/sections/Dashboard/CardProfileSection";
 import CardTitleComponent from "@/components/Titles/CardTitleComponent";
 import CardDropdownComponent from "@/components/Dropdowns/CardDropdownComponent";
 import SongsTableComponent from "@/components/Tables/SongsTableComponent";
-import { getMyTopTracks } from "@/api/user.api";
+import { getMyFullTop, getMyTop, getTracksAudioFeatures } from "@/api/user.api";
 
 ChartJS.register(...registerables);
 
 function DashboardScreen() {
   const [topTracks, setTopTracks] = useState(null);
+  const [audioFeatures, setAudioFeatures] = useState(null);
 
   const { auth, data_user, logout } = useAuth();
 
   useEffect(() => {
     (async () => {
       if (data_user) {
-        const response = await getMyTopTracks(
-          logout,
-          "?limit=50&offset=0&time_range=short_term"
-        );
-        setTopTracks(response);
-        console.log(topTracks);
+        if (!topTracks) {
+          const response = await getMyFullTop(
+            logout,
+            "tracks",
+            "?limit=50&offset=0&time_range=short_term",
+            "?limit=50&offset=49&time_range=short_term"
+          );
+          setTopTracks(response);
+          console.log(response);
+        } else {
+          if (!audioFeatures) {
+            const resAudioFeat = await getTracksAudioFeatures(
+              logout,
+              topTracks
+            );
+            setAudioFeatures(resAudioFeat);
+          }
+        }
       }
     })();
-  }, [data_user]);
+  }, [data_user, topTracks]);
 
   const colors = [
     "rgba(255, 99, 132)",
@@ -335,7 +348,7 @@ function DashboardScreen() {
               </CardDropdownComponent>
             </CardTitleComponent>
 
-            <SongsTableComponent data={topTracks} />
+            <SongsTableComponent data={topTracks} features={audioFeatures} />
           </CardLayout>
         </GridLayout>
       </section>

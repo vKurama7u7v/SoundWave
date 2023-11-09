@@ -3,7 +3,7 @@
 export const SPOTIFY_CALLBACK_HOST = "https://soundwaveio.vercel.app/";
 
 const scopes =
-  "user-read-private user-read-email user-top-read playlist-read-private";
+  "user-read-private user-read-email user-top-read playlist-read-private playlist-read-collaborative user-library-read user-read-recently-played user-read-playback-position user-read-currently-playing user-read-playback-state streaming";
 export const SPOTIFY_AUTH_URL = `https://accounts.spotify.com/authorize?client_id=${process.env.CLIENT_ID}&response_type=code&redirect_uri=${SPOTIFY_CALLBACK_HOST}&scope=${scopes}`;
 
 // AUTH LOCALSTORAGE

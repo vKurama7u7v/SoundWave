@@ -1,10 +1,9 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { size } from "lodash";
 
 import useAuth from "@/hooks/useAuth";
 
 import CardTitleComponent from "@/components/Titles/CardTitleComponent";
-import CardDropdownComponent from "@/components/Dropdowns/CardDropdownComponent";
 
 function CardProfileSection() {
   const { data_user } = useAuth();
@@ -37,9 +36,10 @@ function CardProfileSection() {
                 ""
               )
             }
-            alt="Bonnie image"
+            alt="Avatar"
           />
         </div>
+
         <div className="flex flex-col items-start">
           <h5 class="mb-1 text-xl font-medium text-gray-900 ">
             {data_user ? data_user.display_name : <></>}

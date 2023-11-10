@@ -19,6 +19,9 @@ import CardTitleComponent from "@/components/Titles/CardTitleComponent";
 import CardDropdownComponent from "@/components/Dropdowns/CardDropdownComponent";
 import SongsTableComponent from "@/components/Tables/SongsTableComponent";
 import { getMyFullTop, getMyTop, getTracksAudioFeatures } from "@/api/user.api";
+import DoughnutComponent from "@/components/ChartJS/DoughnutComponent";
+import BarComponent from "@/components/ChartJS/BarComponent";
+import { size } from "lodash";
 
 ChartJS.register(...registerables);
 
@@ -31,6 +34,8 @@ function DashboardScreen() {
     name: "Last 4 Weeks",
     value: "short_term",
   });
+
+  const [stats, setStats] = useState(null);
 
   const { auth, data_user, logout } = useAuth();
 
@@ -57,7 +62,12 @@ function DashboardScreen() {
 
         // Obteniendo las Audio Features de mi Top 99
         const resAudioFeat = await getTracksAudioFeatures(logout, resTracks);
-        if (resAudioFeat) setAudioFeatures(resAudioFeat);
+        if (resAudioFeat) {
+          setAudioFeatures(resAudioFeat);
+
+          setStats(onSetStats(resAudioFeat.audio_features));
+          console.log(stats);
+        }
       }
     } catch (error) {
       console.log("onSetData:", error);
@@ -69,125 +79,48 @@ function DashboardScreen() {
       setTimeRange(time_range);
       setIsOpen(false);
     }
-
-    console.log(time_range);
   };
 
-  const colors = [
-    "rgba(255, 99, 132)",
-    "rgba(54, 162, 235)",
-    "rgba(255, 206, 86)",
-    "rgba(75, 192, 192)",
-    "rgba(153, 102, 255)",
-    "rgba(255, 159, 64)",
-  ];
+  const onSetStats = (dataset) => {
+    if (dataset) {
+      const data = dataset.slice(0, 10);
+      let labels = [
+        "Danceability",
+        "Energy",
+        "Acousticness",
+        "Speechiness",
+        "Instrumentalness",
+        "Liveness",
+        "Valence",
+      ];
 
-  const dataset = ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"];
+      const sumatoria = data.reduce(
+        function (acumulador, next) {
+          return {
+            danceability: acumulador.danceability + next.danceability,
+            energy: acumulador.energy + next.energy,
+            acousticness: acumulador.acousticness + next.acousticness,
+            speechiness: acumulador.speechiness + next.speechiness,
+            instrumentalness:
+              acumulador.instrumentalness + next.instrumentalness,
+            liveness: acumulador.liveness + next.liveness,
+            valence: acumulador.valence + next.valence,
+          };
+        },
+        {
+          danceability: 0,
+          energy: 0,
+          acousticness: 0,
+          speechiness: 0,
+          instrumentalness: 0,
+          liveness: 0,
+          valence: 0,
+        }
+      );
 
-  const setColors = (data) => {
-    let array_colors = [];
-    for (let index = 0; index < data.length; index++) {
-      const number = Math.floor(Math.random() * data.length);
-      const element = colors[number];
-      array_colors.push(element);
+      console.log({ sumatoria, labels, total: data.length });
+      return { sumatoria, labels, total: data.length };
     }
-
-    return array_colors || [];
-  };
-
-  const data = {
-    labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-    datasets: [
-      {
-        label: "# of Votes",
-        data: [12, 19, 3, 5, 2, 3],
-        //  backgroundColor: setColors(dataset),
-        backgroundColor: [
-          "rgba(255, 99, 132, 1)",
-          "rgba(54, 162, 235, 1)",
-          "rgba(255, 206, 86, 1)",
-          "rgba(75, 192, 192, 1)",
-          "rgba(153, 102, 255, 1)",
-          "rgba(255, 159, 64, 1)",
-        ],
-        // borderColor: [
-        //   "rgba(255, 99, 132, 1)",
-        //   "rgba(54, 162, 235, 1)",
-        //   "rgba(255, 206, 86, 1)",
-        //   "rgba(75, 192, 192, 1)",
-        //   "rgba(153, 102, 255, 1)",
-        //   "rgba(255, 159, 64, 1)",
-        // ],
-        borderColor: "rgba(255, 255, 255, 0.1)",
-        // hoverBorderColor: "rgba(255, 255, 255, 0.1)",
-        // borderWidth: 4,
-        // weight: 5,
-        // borderRadius: 4,
-        // circumference: 180,
-        // rotation: 270,
-        borderRadius: 3,
-        spacing: 4,
-        radius: 70, // Tamaño de la grafica
-        hoverOffset: 5,
-      },
-    ],
-  };
-
-  const options = {
-    plugins: {
-      legend: {
-        display: true,
-        position: "left",
-      },
-      colors: {
-        enabled: true,
-      },
-    },
-    responsive: true,
-    maintainAspectRatio: false,
-  };
-
-  const dataBar = {
-    labels: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio"],
-    datasets: [
-      {
-        label: "My First Dataset",
-        data: [65, 59, 80, 81, 56, 55, 40],
-        backgroundColor: [
-          "rgba(255, 99, 132)",
-          "rgba(255, 159, 64)",
-          "rgba(255, 205, 86)",
-          "rgba(75, 192, 192)",
-          "rgba(54, 162, 235)",
-          "rgba(153, 102, 255)",
-          "rgba(201, 203, 207)",
-        ],
-        borderColor: [
-          "rgb(255, 99, 132)",
-          "rgb(255, 159, 64)",
-          "rgb(255, 205, 86)",
-          "rgb(75, 192, 192)",
-          "rgb(54, 162, 235)",
-          "rgb(153, 102, 255)",
-          "rgb(201, 203, 207)",
-        ],
-        borderWidth: 1,
-      },
-    ],
-  };
-
-  const optionsBar = {
-    plugins: {
-      legend: {
-        display: false,
-        position: "left",
-      },
-      colors: {
-        enabled: true,
-      },
-    },
-    responsive: true,
-    maintainAspectRatio: false,
   };
 
   return (
@@ -296,9 +229,12 @@ function DashboardScreen() {
               </div>
             </CardTitleComponent>
 
-            <div style={{ width: "100%" }}>
-              <Doughnut data={data} options={options} />
-            </div>
+            <DoughnutComponent
+              data={null}
+              label={"Cantidad"}
+              display={true}
+              position={"left"}
+            />
           </CardLayout>
 
           {/* Generos Musicales */}
@@ -314,9 +250,7 @@ function DashboardScreen() {
               </div>
             </CardTitleComponent>
 
-            <div style={{ width: "100%" }}>
-              <Doughnut data={data} options={options} />
-            </div>
+            {/*  */}
           </CardLayout>
 
           {/* Analisis */}
@@ -330,9 +264,7 @@ function DashboardScreen() {
               </div>
             </CardTitleComponent>
 
-            <div style={{ width: "100%" }}>
-              <Bar data={dataBar} options={optionsBar} />
-            </div>
+            <BarComponent dataset={stats} label={"Value"} display={false} />
           </CardLayout>
 
           <CardLayout>hola 5</CardLayout>

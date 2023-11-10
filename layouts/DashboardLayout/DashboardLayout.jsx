@@ -13,14 +13,6 @@ function DashboardLayout({ children }) {
 
   const { auth, logout, data_user } = useAuth();
 
-  // useEffect(() => {
-  //   if (!user) {
-  //     setUser(data_user);
-  //     console.log(data_user);
-  //     console.log(user);
-  //   }
-  // }, [data_user]);
-
   const onSetActive = () => {
     setIsActive(!isActive);
   };

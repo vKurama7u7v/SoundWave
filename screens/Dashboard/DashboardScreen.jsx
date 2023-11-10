@@ -26,32 +26,52 @@ function DashboardScreen() {
   const [topTracks, setTopTracks] = useState(null);
   const [audioFeatures, setAudioFeatures] = useState(null);
 
+  const [isOpen, setIsOpen] = useState(false);
+  const [timeRange, setTimeRange] = useState({
+    name: "Last 4 Weeks",
+    value: "short_term",
+  });
+
   const { auth, data_user, logout } = useAuth();
 
   useEffect(() => {
     (async () => {
       if (data_user) {
-        if (!topTracks) {
-          const response = await getMyFullTop(
-            logout,
-            "tracks",
-            "?limit=50&offset=0&time_range=short_term",
-            "?limit=50&offset=49&time_range=short_term"
-          );
-          setTopTracks(response);
-          console.log(response);
-        } else {
-          if (!audioFeatures) {
-            const resAudioFeat = await getTracksAudioFeatures(
-              logout,
-              topTracks
-            );
-            setAudioFeatures(resAudioFeat);
-          }
-        }
+        onSetTracksData(logout, timeRange.value);
       }
     })();
-  }, [data_user, topTracks]);
+  }, [data_user, timeRange]);
+
+  const onSetTracksData = async (logout, time_range) => {
+    try {
+      // Obteniendo el Top 99 de Canciones
+      const resTracks = await getMyFullTop(
+        logout,
+        "tracks",
+        `?limit=50&offset=0&time_range=${time_range}`,
+        `?limit=50&offset=49&time_range=${time_range}`
+      );
+
+      if (resTracks) {
+        setTopTracks(resTracks);
+
+        // Obteniendo las Audio Features de mi Top 99
+        const resAudioFeat = await getTracksAudioFeatures(logout, resTracks);
+        if (resAudioFeat) setAudioFeatures(resAudioFeat);
+      }
+    } catch (error) {
+      console.log("onSetData:", error);
+    }
+  };
+
+  const onSetFilter = (time_range) => {
+    if (time_range.value !== timeRange.value) {
+      setTimeRange(time_range);
+      setIsOpen(false);
+    }
+
+    console.log(time_range);
+  };
 
   const colors = [
     "rgba(255, 99, 132)",
@@ -193,6 +213,72 @@ function DashboardScreen() {
           </div>
         </div>
 
+        {/* Dropdown */}
+        <div className="mb-6">
+          <div class="relative inline-block">
+            <button
+              class="relative z-10 flex items-center p-2 text-sm text-gray-600 bg-white border border-gray-100 rounded-md focus:border-blue-500 focus:ring-opacity-40 dark:focus:ring-opacity-40 focus:ring-blue-300 focus:ring focus:outline-none"
+              onClick={() => setIsOpen(!isOpen)}
+            >
+              <span class="mx-1">
+                {timeRange ? timeRange.name : <>No Seleccionado</>}
+              </span>
+              <i
+                class={
+                  isOpen
+                    ? "uil uil-angle-up text-lg"
+                    : "uil uil-angle-down text-lg"
+                }
+              ></i>
+            </button>
+
+            <div
+              class={
+                isOpen
+                  ? "absolute left-0 z-20 w-48 py-2 mt-2 origin-top-right bg-white rounded-md shadow-md"
+                  : "absolute left-0 z-20 w-48 py-2 mt-2 origin-top-right bg-white rounded-md shadow-md hidden"
+              }
+            >
+              <a
+                href="#"
+                onClick={() =>
+                  onSetFilter({
+                    name: "Last 4 Weeks",
+                    value: "short_term",
+                  })
+                }
+                class="block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-300 transform  hover:bg-gray-100 "
+              >
+                Last 4 Weeks
+              </a>
+              <a
+                href="#"
+                onClick={() =>
+                  onSetFilter({
+                    name: "Last 6 Months",
+                    value: "medium_term",
+                  })
+                }
+                class="block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-300 transform  hover:bg-gray-100 "
+              >
+                Last 6 Months
+              </a>
+              <a
+                href="#"
+                onClick={() =>
+                  onSetFilter({
+                    name: "All Time",
+                    value: "long_term",
+                  })
+                }
+                class="block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-300 transform  hover:bg-gray-100 "
+              >
+                All Time
+              </a>
+            </div>
+          </div>
+        </div>
+
         <GridLayout>
           {/*  */}
           <CardLayout custom="">
@@ -208,27 +294,6 @@ function DashboardScreen() {
                 </div>
                 <h3 class="text-base font-medium text-gray-800">Mood Meter</h3>
               </div>
-
-              <CardDropdownComponent>
-                <a
-                  href="#"
-                  class="block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-300 transform  hover:bg-gray-100 "
-                >
-                  Short Term
-                </a>
-                <a
-                  href="#"
-                  class="block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-300 transform  hover:bg-gray-100 "
-                >
-                  Medium Term
-                </a>
-                <a
-                  href="#"
-                  class="block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-300 transform  hover:bg-gray-100 "
-                >
-                  Long Term
-                </a>
-              </CardDropdownComponent>
             </CardTitleComponent>
 
             <div style={{ width: "100%" }}>
@@ -247,27 +312,6 @@ function DashboardScreen() {
                   Generos Musicales
                 </h3>
               </div>
-
-              <CardDropdownComponent>
-                <a
-                  href="#"
-                  class="block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-300 transform  hover:bg-gray-100 "
-                >
-                  Short Term
-                </a>
-                <a
-                  href="#"
-                  class="block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-300 transform  hover:bg-gray-100 "
-                >
-                  Medium Term
-                </a>
-                <a
-                  href="#"
-                  class="block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-300 transform  hover:bg-gray-100 "
-                >
-                  Long Term
-                </a>
-              </CardDropdownComponent>
             </CardTitleComponent>
 
             <div style={{ width: "100%" }}>
@@ -284,27 +328,6 @@ function DashboardScreen() {
                 </div>
                 <h3 class="text-base font-medium text-gray-800">Analisis</h3>
               </div>
-
-              <CardDropdownComponent>
-                <a
-                  href="#"
-                  class="block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-300 transform  hover:bg-gray-100 "
-                >
-                  Short Term
-                </a>
-                <a
-                  href="#"
-                  class="block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-300 transform  hover:bg-gray-100 "
-                >
-                  Medium Term
-                </a>
-                <a
-                  href="#"
-                  class="block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-300 transform  hover:bg-gray-100 "
-                >
-                  Long Term
-                </a>
-              </CardDropdownComponent>
             </CardTitleComponent>
 
             <div style={{ width: "100%" }}>
@@ -325,27 +348,6 @@ function DashboardScreen() {
                 </div>
                 <h3 class="text-base font-medium text-gray-800">Top</h3>
               </div>
-
-              <CardDropdownComponent>
-                <a
-                  href="#"
-                  class="block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-300 transform  hover:bg-gray-100 "
-                >
-                  Songs
-                </a>
-                <a
-                  href="#"
-                  class="block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-300 transform  hover:bg-gray-100 "
-                >
-                  Artists
-                </a>
-                <a
-                  href="#"
-                  class="block px-4 py-3 text-sm text-gray-600 capitalize transition-colors duration-300 transform  hover:bg-gray-100 "
-                >
-                  Genres
-                </a>
-              </CardDropdownComponent>
             </CardTitleComponent>
 
             <SongsTableComponent data={topTracks} features={audioFeatures} />

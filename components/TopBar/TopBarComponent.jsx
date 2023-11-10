@@ -10,6 +10,10 @@ function TopBarComponent(props) {
     setIsOpen(!isOpen);
   };
 
+  if (!user) {
+    return null;
+  }
+
   return (
     <>
       <header className="topbar">
@@ -46,16 +50,8 @@ function TopBarComponent(props) {
                     <div class="relative h-10 w-10">
                       <img
                         class="h-full w-full rounded-full object-cover object-center ring ring-white"
-                        src={
-                          user ? (
-                            <>
-                              {size(user.images) > 0 ? user.images[1].url : ""}
-                            </>
-                          ) : (
-                            ""
-                          )
-                        }
-                        alt=""
+                        src={size(user.images) == 0 ? "" : user.images[1].url}
+                        alt={user ? user.display_name : "Avatar"}
                       />
                       <span class="absolute right-0 bottom-0 h-2 w-2 rounded-full bg-green-400 ring ring-white"></span>
                     </div>
@@ -76,18 +72,8 @@ function TopBarComponent(props) {
                       <div class="relative h-10 w-10">
                         <img
                           class="h-full w-full rounded-full object-cover object-center ring ring-white"
-                          src={
-                            user ? (
-                              <>
-                                {size(user.images) > 0
-                                  ? user.images[1].url
-                                  : ""}
-                              </>
-                            ) : (
-                              ""
-                            )
-                          }
-                          alt=""
+                          src={size(user.images) == 0 ? "" : user.images[1].url}
+                          alt={user ? user.display_name : "Avatar"}
                         />
                         <span class="absolute right-0 bottom-0 h-2 w-2 rounded-full bg-green-400 ring ring-white"></span>
                       </div>

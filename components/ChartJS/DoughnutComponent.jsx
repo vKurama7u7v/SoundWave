@@ -12,14 +12,19 @@ import {
 import { Doughnut, Bar } from "react-chartjs-2";
 
 function DoughnutComponent(props) {
-  const { dataset, label, display, position } = props;
+  const { dataset, label, display, position, radius } = props;
+
+  if (!dataset) {
+    return null;
+  }
+  const { labels, values } = dataset;
 
   const data = {
-    labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+    labels: labels,
     datasets: [
       {
         label: label ? label : "",
-        data: [12, 19, 3, 5, 2, 3],
+        data: values,
         //  backgroundColor: setColors(dataset),
         backgroundColor: [
           "rgba(255, 99, 132, 1)",
@@ -46,7 +51,7 @@ function DoughnutComponent(props) {
         // rotation: 270,
         borderRadius: 3,
         spacing: 4,
-        radius: 70, // Tamaño de la grafica
+        radius: radius, // Tamaño de la grafica
         hoverOffset: 5,
       },
     ],
@@ -68,7 +73,7 @@ function DoughnutComponent(props) {
 
   return (
     <>
-      <div style={{ width: "100%" }}>
+      <div style={{ width: "100%", height: "350px" }}>
         <Doughnut data={data} options={options} />
       </div>
     </>

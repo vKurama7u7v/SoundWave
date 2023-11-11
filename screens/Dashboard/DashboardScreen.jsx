@@ -18,10 +18,13 @@ import CardProfileSection from "@/sections/Dashboard/CardProfileSection";
 import CardTitleComponent from "@/components/Titles/CardTitleComponent";
 import CardDropdownComponent from "@/components/Dropdowns/CardDropdownComponent";
 import SongsTableComponent from "@/components/Tables/SongsTableComponent";
-import { getMyFullTop, getMyTop, getTracksAudioFeatures } from "@/api/user.api";
+
 import DoughnutComponent from "@/components/ChartJS/DoughnutComponent";
 import BarComponent from "@/components/ChartJS/BarComponent";
-import { size } from "lodash";
+
+import { getMyFullTop, getMyTop, getTracksAudioFeatures } from "@/api/user.api";
+import { getMoodTrack } from "@/utils/mood-meter.utils";
+import RadarComponent from "@/components/ChartJS/RadarComponent";
 
 ChartJS.register(...registerables);
 
@@ -36,6 +39,7 @@ function DashboardScreen() {
   });
 
   const [stats, setStats] = useState(null);
+  const [moodStats, setMoodStats] = useState(null);
 
   const { auth, data_user, logout } = useAuth();
 
@@ -66,7 +70,9 @@ function DashboardScreen() {
           setAudioFeatures(resAudioFeat);
 
           setStats(onSetStats(resAudioFeat.audio_features));
-          console.log(stats);
+          setMoodStats(
+            onSetMoodStats(resAudioFeat.audio_features.slice(0, 99))
+          );
         }
       }
     } catch (error) {
@@ -83,7 +89,7 @@ function DashboardScreen() {
 
   const onSetStats = (dataset) => {
     if (dataset) {
-      const data = dataset.slice(0, 10);
+      const data = dataset.slice(0, 15);
       let labels = [
         "Danceability",
         "Energy",
@@ -118,8 +124,57 @@ function DashboardScreen() {
         }
       );
 
-      console.log({ sumatoria, labels, total: data.length });
-      return { sumatoria, labels, total: data.length };
+      return onSetDataAnalysis(sumatoria, data.length, labels);
+    }
+  };
+
+  const onSetDataAnalysis = (data, total, labels) => {
+    if (data) {
+      const values = [
+        data.danceability / total,
+        data.energy / total,
+        data.acousticness / total,
+        data.speechiness / total,
+        data.instrumentalness / total,
+        data.liveness / total,
+        data.valence / total,
+      ];
+
+      console.log({ labels, values });
+      return { labels, values };
+    }
+  };
+
+  const onSetMoodStats = (dataset) => {
+    if (dataset) {
+      let moods = [];
+      for (let index = 0; index < dataset.length; index++) {
+        const element = getMoodTrack(
+          dataset[index].energy,
+          dataset[index].valence
+        );
+        moods.push(element.emotion);
+      }
+
+      if (moods.length > 0) {
+        const repetidos = {};
+
+        moods.forEach(function (numero) {
+          repetidos[numero] = (repetidos[numero] || 0) + 1;
+        });
+
+        if (repetidos) {
+          let values = [];
+          let labels = Object.keys(repetidos);
+
+          for (let i = 0; i < labels.length; i++) {
+            let clave = labels[i];
+            values.push(repetidos[clave]);
+          }
+
+          return { labels, values };
+        }
+      }
     }
   };
 
@@ -219,7 +274,7 @@ function DashboardScreen() {
           </CardLayout>
 
           {/* Mood Meter */}
-          <CardLayout custom="">
+          <CardLayout custom="col-span-2">
             <CardTitleComponent>
               <div class="flex items-center gap-x-2">
                 <div class="inline-flex justify-center items-center w-10 h-10 rounded-full border-4 border-esmerald-50 bg-esmerald-100">
@@ -229,12 +284,27 @@ function DashboardScreen() {
               </div>
             </CardTitleComponent>
 
-            <DoughnutComponent
-              data={null}
+            <BarComponent
+              dataset={moodStats}
               label={"Cantidad"}
-              display={true}
+              display={false}
               position={"left"}
+              radius={120}
             />
+          </CardLayout>
+
+          {/* Analisis */}
+          <CardLayout>
+            <CardTitleComponent>
+              <div class="flex items-center gap-x-2">
+                <div class="inline-flex justify-center items-center w-10 h-10 rounded-full border-4 border-esmerald-50 bg-esmerald-100">
+                  <i class="uil uil-analysis text-esmerald-500 text-2xl"></i>
+                </div>
+                <h3 class="text-base font-medium text-gray-800">Analisis</h3>
+              </div>
+            </CardTitleComponent>
+
+            <BarComponent dataset={stats} label={"Value"} display={false} />
           </CardLayout>
 
           {/* Generos Musicales */}
@@ -251,20 +321,13 @@ function DashboardScreen() {
             </CardTitleComponent>
 
             {/*  */}
-          </CardLayout>
-
-          {/* Analisis */}
-          <CardLayout>
-            <CardTitleComponent>
-              <div class="flex items-center gap-x-2">
-                <div class="inline-flex justify-center items-center w-10 h-10 rounded-full border-4 border-esmerald-50 bg-esmerald-100">
-                  <i class="uil uil-analysis text-esmerald-500 text-2xl"></i>
-                </div>
-                <h3 class="text-base font-medium text-gray-800">Analisis</h3>
-              </div>
-            </CardTitleComponent>
-
-            <BarComponent dataset={stats} label={"Value"} display={false} />
+            {/* <RadarComponent
+              dataset={stats}
+              label={"Value"}
+              display={false}
+              position={"top"}
+              radius={120}
+            /> */}
           </CardLayout>
 
           <CardLayout>hola 5</CardLayout>

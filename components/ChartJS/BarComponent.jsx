@@ -18,30 +18,15 @@ function BarComponent(props) {
     return null;
   }
 
-  const { labels, sumatoria, total } = dataset;
-
-  const onSetData = (data, total) => {
-    if (data) {
-      const values = [
-        data.danceability / total,
-        data.energy / total,
-        data.acousticness / total,
-        data.speechiness / total,
-        data.instrumentalness / total,
-        data.liveness / total,
-        data.valence / total,
-      ];
-
-      return values;
-    }
-  };
+  console.log(dataset);
+  const { labels, values } = dataset;
 
   const data = {
     labels: labels,
     datasets: [
       {
         label: label ? label : "",
-        data: onSetData(sumatoria, total),
+        data: values,
         backgroundColor: [
           "rgba(255, 99, 132)",
           "rgba(255, 205, 86)",

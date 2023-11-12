@@ -58,7 +58,6 @@ export async function getTracksAudioFeatures(logout, data) {
         const url = `https://api.spotify.com/v1/audio-features?ids=${ids}`;
 
         const result = await authFetch(url, null, logout);
-        console.log("AudioFeatures:", result);
         return result ? result : null;
       }
     }

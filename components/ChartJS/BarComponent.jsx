@@ -18,7 +18,6 @@ function BarComponent(props) {
     return null;
   }
 
-  console.log(dataset);
   const { labels, values } = dataset;
 
   const data = {

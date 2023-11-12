@@ -25,11 +25,14 @@ import BarComponent from "@/components/ChartJS/BarComponent";
 import { getMyFullTop, getMyTop, getTracksAudioFeatures } from "@/api/user.api";
 import { getMoodTrack } from "@/utils/mood-meter.utils";
 import RadarComponent from "@/components/ChartJS/RadarComponent";
+import TracksTableComponent from "@/components/Tables/TracksTableComponent";
+import ArtistsTablesComponent from "@/components/Tables/ArtistsTablesomponent";
 
 ChartJS.register(...registerables);
 
 function DashboardScreen() {
   const [topTracks, setTopTracks] = useState(null);
+  const [topArtist, setTopArtist] = useState(null);
   const [audioFeatures, setAudioFeatures] = useState(null);
 
   const [isOpen, setIsOpen] = useState(false);
@@ -40,6 +43,7 @@ function DashboardScreen() {
 
   const [stats, setStats] = useState(null);
   const [moodStats, setMoodStats] = useState(null);
+  const [moodTracksStats, setmoodTracksStats] = useState(null);
 
   const { auth, data_user, logout } = useAuth();
 
@@ -47,10 +51,12 @@ function DashboardScreen() {
     (async () => {
       if (data_user) {
         onSetTracksData(logout, timeRange.value);
+        onSetTopArtistsData(logout, timeRange.value);
       }
     })();
   }, [data_user, timeRange]);
 
+  // ===== Canciones =====
   const onSetTracksData = async (logout, time_range) => {
     try {
       // Obteniendo el Top 99 de Canciones
@@ -70,13 +76,12 @@ function DashboardScreen() {
           setAudioFeatures(resAudioFeat);
 
           setStats(onSetStats(resAudioFeat.audio_features));
-          setMoodStats(
-            onSetMoodStats(resAudioFeat.audio_features.slice(0, 99))
-          );
+          setMoodStats(onSetMoodStats(resAudioFeat.audio_features));
+          setmoodTracksStats(onSetMoodTracksStats(resAudioFeat.audio_features));
         }
       }
     } catch (error) {
-      console.log("onSetData:", error);
+      console.log("onSetTracksData:", error);
     }
   };
 
@@ -140,7 +145,6 @@ function DashboardScreen() {
         data.valence / total,
       ];
 
-      console.log({ labels, values });
       return { labels, values };
     }
   };
@@ -178,6 +182,58 @@ function DashboardScreen() {
     }
   };
 
+  const onSetMoodTracksStats = (dataset) => {
+    if (dataset) {
+      let moods = [];
+      for (let index = 0; index < dataset.length; index++) {
+        const element = getMoodTrack(
+          dataset[index].energy,
+          dataset[index].valence
+        );
+        moods.push(element.mood);
+      }
+
+      if (moods.length > 0) {
+        const repetidos = {};
+
+        moods.sort().forEach(function (numero) {
+          repetidos[numero] = (repetidos[numero] || 0) + 1;
+        });
+
+        if (repetidos) {
+          let values = [];
+          let labels = Object.keys(repetidos);
+
+          for (let i = 0; i < labels.length; i++) {
+            let clave = labels[i];
+            values.push(repetidos[clave]);
+          }
+
+          return { labels, values };
+        }
+      }
+    }
+  };
+
+  // ===== Artistas =====
+  const onSetTopArtistsData = async (logout, time_range) => {
+    try {
+      const resArtist = await getMyFullTop(
+        logout,
+        "artists",
+        `?limit=50&offset=0&time_range=${time_range}`,
+        `?limit=50&offset=49&time_range=${time_range}`
+      );
+
+      console.log("restArtist", resArtist);
+
+      if (resArtist) {
+        setTopArtist(resArtist);
+      }
+    } catch (error) {
+      console.log("onSetTopArtistsData:", error);
+    }
+  };
   return (
     <>
       <section className="dashboard__kpis m-6  xl:mx-10">
@@ -273,26 +329,6 @@ function DashboardScreen() {
             <CardProfileSection />
           </CardLayout>
 
-          {/* Mood Meter */}
-          <CardLayout custom="col-span-2">
-            <CardTitleComponent>
-              <div class="flex items-center gap-x-2">
-                <div class="inline-flex justify-center items-center w-10 h-10 rounded-full border-4 border-esmerald-50 bg-esmerald-100">
-                  <i class="uil uil-grin text-esmerald-500 text-2xl"></i>
-                </div>
-                <h3 class="text-base font-medium text-gray-800">Mood Meter</h3>
-              </div>
-            </CardTitleComponent>
-
-            <BarComponent
-              dataset={moodStats}
-              label={"Cantidad"}
-              display={false}
-              position={"left"}
-              radius={120}
-            />
-          </CardLayout>
-
           {/* Analisis */}
           <CardLayout>
             <CardTitleComponent>
@@ -305,6 +341,31 @@ function DashboardScreen() {
             </CardTitleComponent>
 
             <BarComponent dataset={stats} label={"Value"} display={false} />
+          </CardLayout>
+
+          {/* Mood Tracks */}
+          <CardLayout custom="">
+            <CardTitleComponent>
+              <div class="flex items-center gap-x-2">
+                <div class="inline-flex justify-center items-center w-10 h-10 rounded-full border-4 border-esmerald-50 bg-esmerald-100">
+                  <i class="uil uil-tachometer-fast-alt text-esmerald-500 text-2xl"></i>
+                </div>
+                <h3 class="text-base font-medium text-gray-800">
+                  Mis Canciones
+                </h3>
+              </div>
+            </CardTitleComponent>
+            <div className="flex justify-between items-center">
+              {/* <div className="">mood</div> */}
+              <DoughnutComponent
+                dataset={moodTracksStats}
+                label={"# de Canciones"}
+                display={false}
+                position={"top"}
+                radius={70}
+                width={"100%"}
+              />
+            </div>
           </CardLayout>
 
           {/* Generos Musicales */}
@@ -330,12 +391,41 @@ function DashboardScreen() {
             /> */}
           </CardLayout>
 
-          <CardLayout>hola 5</CardLayout>
+          {/* Mood Meter */}
+          <CardLayout custom="col-span-2">
+            <CardTitleComponent>
+              <div class="flex items-center gap-x-2">
+                <div class="inline-flex justify-center items-center w-10 h-10 rounded-full border-4 border-esmerald-50 bg-esmerald-100">
+                  <i class="uil uil-grin text-esmerald-500 text-2xl"></i>
+                </div>
+                <h3 class="text-base font-medium text-gray-800">Mood Meter</h3>
+              </div>
+            </CardTitleComponent>
 
-          <CardLayout>hola 6</CardLayout>
+            <BarComponent
+              dataset={moodStats}
+              label={"Cantidad"}
+              display={false}
+              position={"left"}
+              radius={120}
+            />
+          </CardLayout>
+
+          <CardLayout>
+            <CardTitleComponent>
+              <div class="flex items-center gap-x-2">
+                <div class="inline-flex justify-center items-center w-10 h-10 rounded-full border-4 border-esmerald-50 bg-esmerald-100">
+                  <i class="uil uil-grin text-esmerald-500 text-2xl"></i>
+                </div>
+                <h3 class="text-base font-medium text-gray-800">
+                  Recomendación del Día
+                </h3>
+              </div>
+            </CardTitleComponent>
+          </CardLayout>
 
           {/* Tabla */}
-          <CardLayout custom="col-span-3">
+          <CardLayout custom="col-span-1 md:col-span-2 xl:col-span-3 2xl:col-span-2">
             <CardTitleComponent>
               <div class="flex items-center gap-x-2">
                 <div class="inline-flex justify-center items-center w-10 h-10 rounded-full border-4 border-esmerald-50 bg-esmerald-100">
@@ -345,7 +435,28 @@ function DashboardScreen() {
               </div>
             </CardTitleComponent>
 
-            <SongsTableComponent data={topTracks} features={audioFeatures} />
+            <TracksTableComponent
+              data={topTracks ? topTracks.slice(0, 15) : null}
+              features={audioFeatures}
+            />
+
+            {/* <SongsTableComponent data={topTracks} features={audioFeatures} /> */}
+          </CardLayout>
+
+          {/* Artista */}
+          <CardLayout custom="col-span-1 md:col-span-2 xl:col-span-3 2xl:col-span-2">
+            <CardTitleComponent>
+              <div class="flex items-center gap-x-2">
+                <div class="inline-flex justify-center items-center w-10 h-10 rounded-full border-4 border-esmerald-50 bg-esmerald-100">
+                  <i class="uil uil-music text-esmerald-500 text-2xl"></i>
+                </div>
+                <h3 class="text-base font-medium text-gray-800">Top Artists</h3>
+              </div>
+            </CardTitleComponent>
+
+            <ArtistsTablesComponent
+              data={topArtist ? topArtist.slice(0, 15) : null}
+            />
           </CardLayout>
         </GridLayout>
       </section>

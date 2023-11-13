@@ -23,14 +23,19 @@ export async function authFetch(url, params, logout) {
             ...params?.headers,
             Authorization: `Bearer ${token.access_token}`,
           },
+          form: {
+            grant_type: "client_credentials",
+          },
+          json: true,
         };
 
         try {
+          console.log("params", paramsTemp);
           const response = await fetch(url, paramsTemp);
           const result = await response.json();
           return result;
         } catch (error) {
-          console.log("asdw", error);
+          console.log("authFetch", error);
           return error;
         }
       }

@@ -71,11 +71,13 @@ function DashboardScreen() {
   }, [data_user && timeRange]);
 
   useEffect(() => {
-    if (idListArtists && idListTracks) {
-      setRecommendation(
-        onSetRecommendationList(logout, 50, idListArtists, idListTracks)
-      );
-    }
+    (async () => {
+      if (idListArtists && idListTracks) {
+        setRecommendation(
+          onSetRecommendationList(logout, 10, idListArtists, idListTracks)
+        );
+      }
+    })();
   }, [idListArtists && idListTracks]);
 
   // ===== Canciones =====
@@ -366,21 +368,23 @@ function DashboardScreen() {
       if (artists.length > 0) seed_artists = artists.toString();
       if (tracks.length > 0) seed_tracks = tracks.toString();
 
-      const response = await getRecommendations(
-        logout,
-        limit,
-        seed_artists,
-        seed_tracks
-      );
+      if (seed_artists && seed_tracks) {
+        const response = await getRecommendations(
+          logout,
+          limit,
+          seed_artists,
+          seed_tracks
+        );
 
-      // const response = null;
+        // const response = null;
 
-      if (response) {
-        const { tracks } = response;
+        if (response) {
+          const { tracks } = response;
 
-        if (tracks) {
-          const filter = onFilterTracks(tracks);
-          setRecommendation(filter);
+          if (tracks) {
+            const filter = onFilterTracks(tracks);
+            setRecommendation(filter);
+          }
         }
       }
     } catch (error) {

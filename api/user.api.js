@@ -78,11 +78,17 @@ export async function getRecommendations(
   seed_tracks
 ) {
   try {
-    const url = `https://api.spotify.com/v1/recommendations?limit=${
+    if (!limit && !seed_artists && !seed_tracks) return null;
+    console.log({ limit, seed_artists, seed_tracks });
+
+    const url = `https://api.spotify.com/v1/recommendations?market=SE&limit=${
       limit ? limit : 10
-    }&seed_artists=${seed_artists}&seed_tracks=${seed_tracks}&market=SE`;
+    }&seed_artists=${seed_artists ? seed_artists : null}&seed_tracks=${
+      seed_tracks ? seed_tracks : null
+    }`;
 
     const result = await authFetch(url, null, logout);
+
     return result ? result : null;
   } catch (error) {
     console.log("getRecommendations:", error);

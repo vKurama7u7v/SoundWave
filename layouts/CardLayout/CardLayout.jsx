@@ -6,9 +6,7 @@ function CardLayout(props) {
   return (
     <>
       <div
-        className={
-          "card__item p-6 rounded-lg relative left-0 right-0 " + custom
-        }
+        className={"card__item p-6 rounded-lg relative " + custom}
         style={{ background: bgColor }}
       >
         {children}

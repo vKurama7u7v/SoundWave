@@ -1,7 +1,7 @@
 import React from "react";
 import { map, size } from "lodash";
 
-function ArtistsTablesComponent(props) {
+function AlbumsTableComponent(props) {
   const { data } = props;
 
   if (!data) return null;
@@ -23,14 +23,14 @@ function ArtistsTablesComponent(props) {
                 scope="col"
                 class="px-4 pl-0 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 "
               >
-                Artist
+                Album
               </th>
 
               <th
                 scope="col"
                 class="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 "
               >
-                Popularity
+                Artists
               </th>
             </tr>
           </thead>
@@ -55,7 +55,7 @@ function ArtistsTablesComponent(props) {
                           <td class="px-4 pl-0 py-4 text-sm text-gray-500">
                             <div class="flex items-center gap-x-2">
                               <div className="w-10 h-10 relative">
-                                <div className="absolute left-0 top-0 w-10 h-10 rounded bg-black opacity-10"></div>
+                                <div className="absolute left-0 top-0 w-10 h-10 rounded bg-black opacity-0"></div>
                                 <img
                                   class="object-cover w-10 h-10 rounded"
                                   src={item.images ? item.images[0].url : ""}
@@ -67,28 +67,32 @@ function ArtistsTablesComponent(props) {
                                   {item.name ? item.name : ""}
                                 </h2>
                                 <p class="text-xs font-normal text-gray-600 capitalize">
-                                  {item.type ? item.type : ""}
+                                  {item.album_type ? item.album_type : ""} |{" "}
+                                  <span className="text-gray-600">
+                                    {item.total}{" "}
+                                    {item.total == 1 ? "Track" : "Tracks"}
+                                  </span>
                                 </p>
                               </div>
                             </div>
                           </td>
 
                           <td class="px-4 py-4 text-gray-500">
-                            <div class="flex justify-between mb-1 w-60">
-                              <span class="font-semibold text-sm text-gray-400 ">
-                                {`${item.popularity ? item.popularity : ""}%`}
-                              </span>
-                            </div>
-                            <div className="w-60 h-2.5 bg-gray-200 rounded-full">
-                              <div
-                                class="bg-green-400 h-2.5 rounded-full dark:bg-green-500"
-                                style={{
-                                  width: `${
-                                    item.popularity ? item.popularity : ""
-                                  }%`,
-                                }}
-                              ></div>
-                            </div>
+                            <p class="text-sm font-normal text-gray-500 ">
+                              {size(item.artists) == 0 ? (
+                                <>N/A</>
+                              ) : (
+                                item.artists.map((artist, index) => (
+                                  <>
+                                    {index == 0 ? (
+                                      <>{artist.name}</>
+                                    ) : (
+                                      <>, {artist.name}</>
+                                    )}
+                                  </>
+                                ))
+                              )}
+                            </p>
                           </td>
                         </tr>
                       </>
@@ -105,14 +109,4 @@ function ArtistsTablesComponent(props) {
   );
 }
 
-export default ArtistsTablesComponent;
-
-{
-  /* <div class="flex justify-between mb-1">
-  <span class="text-base font-medium text-blue-700 dark:text-white">Flowbite</span>
-  <span class="text-sm font-medium text-blue-700 dark:text-white">45%</span>
-</div>
-<div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-  <div class="bg-blue-600 h-2.5 rounded-full" style="width: 45%"></div>
-</div> */
-}
+export default AlbumsTableComponent;

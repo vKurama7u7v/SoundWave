@@ -10,30 +10,40 @@ import {
   LinearScale,
   registerables,
 } from "chart.js";
-import { Doughnut, Bar } from "react-chartjs-2";
+
+import useAuth from "@/hooks/useAuth";
+
 import CardLayout from "@/layouts/CardLayout";
 import GridLayout from "@/layouts/GridLayout";
-import useAuth from "@/hooks/useAuth";
 import CardProfileSection from "@/sections/Dashboard/CardProfileSection";
 import CardTitleComponent from "@/components/Titles/CardTitleComponent";
-import CardDropdownComponent from "@/components/Dropdowns/CardDropdownComponent";
-import SongsTableComponent from "@/components/Tables/SongsTableComponent";
+import TracksTableComponent from "@/components/Tables/TracksTableComponent";
+import ArtistsTablesComponent from "@/components/Tables/ArtistsTableComponent";
+import AlbumsTableComponent from "@/components/Tables/AlbumsTableComponent";
 
 import DoughnutComponent from "@/components/ChartJS/DoughnutComponent";
 import BarComponent from "@/components/ChartJS/BarComponent";
-
-import { getMyFullTop, getMyTop, getTracksAudioFeatures } from "@/api/user.api";
-import { getMoodTrack } from "@/utils/mood-meter.utils";
 import RadarComponent from "@/components/ChartJS/RadarComponent";
-import TracksTableComponent from "@/components/Tables/TracksTableComponent";
-import ArtistsTablesComponent from "@/components/Tables/ArtistsTablesomponent";
+
+import {
+  getMyFullTop,
+  getRecommendations,
+  getTracksAudioFeatures,
+} from "@/api/user.api";
+import { getMoodTrack } from "@/utils/mood-meter.utils";
+import { orderBy, sortBy } from "lodash";
+import GenresTableComponent from "@/components/Tables/GenresTableComponent";
+import PlayerWidget from "@/widgets/PlayerWidget/PlayerWidget";
 
 ChartJS.register(...registerables);
 
 function DashboardScreen() {
   const [topTracks, setTopTracks] = useState(null);
   const [topArtist, setTopArtist] = useState(null);
+  const [topAlbums, setTopAlbums] = useState(null);
+  const [topGenres, setTopGenres] = useState(null);
   const [audioFeatures, setAudioFeatures] = useState(null);
+  const [recommendation, setRecommendation] = useState(null);
 
   const [isOpen, setIsOpen] = useState(false);
   const [timeRange, setTimeRange] = useState({
@@ -43,7 +53,11 @@ function DashboardScreen() {
 
   const [stats, setStats] = useState(null);
   const [moodStats, setMoodStats] = useState(null);
-  const [moodTracksStats, setmoodTracksStats] = useState(null);
+  const [moodTracksStats, setMoodTracksStats] = useState(null);
+
+  const [load, setLoad] = useState(null);
+  const [idListTracks, setIdListTracks] = useState(null);
+  const [idListArtists, setIdListArtists] = useState(null);
 
   const { auth, data_user, logout } = useAuth();
 
@@ -54,7 +68,15 @@ function DashboardScreen() {
         onSetTopArtistsData(logout, timeRange.value);
       }
     })();
-  }, [data_user, timeRange]);
+  }, [data_user && timeRange]);
+
+  useEffect(() => {
+    if (idListArtists && idListTracks) {
+      setRecommendation(
+        onSetRecommendationList(logout, 50, idListArtists, idListTracks)
+      );
+    }
+  }, [idListArtists && idListTracks]);
 
   // ===== Canciones =====
   const onSetTracksData = async (logout, time_range) => {
@@ -69,6 +91,8 @@ function DashboardScreen() {
 
       if (resTracks) {
         setTopTracks(resTracks);
+        setIdListTracks(getListOfIds(resTracks, 3));
+        setTopAlbums(onSetTopAlbumsData(resTracks));
 
         // Obteniendo las Audio Features de mi Top 99
         const resAudioFeat = await getTracksAudioFeatures(logout, resTracks);
@@ -77,7 +101,7 @@ function DashboardScreen() {
 
           setStats(onSetStats(resAudioFeat.audio_features));
           setMoodStats(onSetMoodStats(resAudioFeat.audio_features));
-          setmoodTracksStats(onSetMoodTracksStats(resAudioFeat.audio_features));
+          setMoodTracksStats(onSetMoodTracksStats(resAudioFeat.audio_features));
         }
       }
     } catch (error) {
@@ -225,15 +249,196 @@ function DashboardScreen() {
         `?limit=50&offset=49&time_range=${time_range}`
       );
 
-      console.log("restArtist", resArtist);
-
       if (resArtist) {
         setTopArtist(resArtist);
+        setIdListArtists(getListOfIds(resArtist, 2));
+        setTopGenres(onSetTopGenresData(resArtist));
+        // getListOfGenres(onSetTopGenresData(resArtist));
       }
     } catch (error) {
       console.log("onSetTopArtistsData:", error);
     }
   };
+
+  // ===== Albums =====
+  const onSetTopAlbumsData = (dataset) => {
+    if (dataset && dataset.length > 0) {
+      let albums = [];
+
+      dataset.forEach((item) => {
+        const element = {
+          id: item.album.id,
+          name: item.album.name,
+          album_type: item.album.album_type,
+          href: item.album.href,
+          images: item.album.images,
+          artists: item.album.artists,
+          external_urls: item.album.external_urls,
+          release_date: item.album.release_date,
+          total: 1,
+        };
+
+        albums.push(element);
+      });
+
+      if (albums.length > 0) {
+        let repeated = {};
+
+        albums.forEach(function (e, i) {
+          let id = e["id"];
+          if (repeated[id] == undefined) {
+            repeated[id] = [e]; //Obtenemos el objeto.
+          } else {
+            repeated[id].push(e); //Insertamos otro objeto si se repite el indice repetido.
+          }
+        });
+
+        let output = [];
+        for (let i in repeated) {
+          //recorremos todos los índices de los objetos repetidos.
+          output.push(repeated[i][0]);
+          if (repeated[i].length > 1)
+            //Hay mas de un objeto repetido.
+            output[output.length - 1]["total"] = repeated[i].length; //Como se repite le colocamos la cantidad de repetidos.
+        }
+
+        const result = orderBy(output, "total", ["desc", "asc"]);
+
+        return result;
+      }
+    }
+    return null;
+  };
+
+  // ===== Genres =====
+  const onSetTopGenresData = (dataset) => {
+    if (dataset && dataset.length > 0) {
+      let genres = [];
+
+      // Obteniendo todos los generos
+      dataset.forEach((item) => {
+        if (item.genres && item.genres.length > 0) {
+          item.genres.forEach((element) => {
+            genres.push({ name: element, total: 1 });
+          });
+        }
+      });
+
+      if (genres.length > 0) {
+        let repeated = {};
+
+        // Agrupar tipos de generos
+        genres.forEach(function (e, i) {
+          let id = e["name"];
+          if (repeated[id] == undefined) {
+            repeated[id] = [e]; //Obtenemos el objeto.
+          } else {
+            repeated[id].push(e); //Insertamos otro objeto si se repite el indice repetido.
+          }
+        });
+
+        // Contar los generos
+        let output = [];
+        for (let i in repeated) {
+          //recorremos todos los índices de los objetos repetidos.
+          output.push(repeated[i][0]);
+          if (repeated[i].length > 1)
+            //Hay mas de un objeto repetido.
+            output[output.length - 1]["total"] = repeated[i].length; //Como se repite le colocamos la cantidad de repetidos.
+        }
+
+        const result = orderBy(output, "total", ["desc", "asc"]);
+        // console.log(result);
+
+        return result;
+      }
+    }
+
+    return null;
+  };
+
+  // ===== Recomendaciones =====
+  const onSetRecommendationList = async (logout, limit, artists, tracks) => {
+    try {
+      let seed_artists;
+      let seed_tracks;
+
+      if (artists.length > 0) seed_artists = artists.toString();
+      if (tracks.length > 0) seed_tracks = tracks.toString();
+
+      const response = await getRecommendations(
+        logout,
+        limit,
+        seed_artists,
+        seed_tracks
+      );
+
+      // const response = null;
+
+      if (response) {
+        const { tracks } = response;
+
+        if (tracks) {
+          const filter = onFilterTracks(tracks);
+          setRecommendation(filter);
+        }
+      }
+    } catch (error) {
+      console.log("onSetRecommendationList:", error);
+    }
+  };
+
+  const getListOfIds = (data, limit) => {
+    if (data && data.length > 0) {
+      let id_list = [];
+
+      data.slice(0, limit).forEach((element) => {
+        if (!id_list.includes(element.id)) {
+          id_list.push(element.id);
+        }
+      });
+
+      if (id_list.length > 0) {
+        return id_list;
+      }
+    }
+
+    return null;
+  };
+
+  const getListOfGenres = (data) => {
+    if (data && data.length > 0) {
+      let genres = [];
+
+      // Obteniendo todos los generos
+      data.forEach((item) => {
+        if (!genres.includes(item.name)) {
+          genres.push(item.name);
+          console.log(item.name);
+        }
+      });
+
+      console.log(genres);
+    }
+  };
+
+  const onFilterTracks = (data) => {
+    if (data) {
+      let output = [];
+      data.forEach((element) => {
+        if (element.preview_url) {
+          output.push(element);
+        }
+      });
+
+      if (output.length > 0) {
+        return orderBy(output, "popularity", ["desc", "asc"]);
+      }
+    }
+
+    return null;
+  };
+
   return (
     <>
       <section className="dashboard__kpis m-6  xl:mx-10">
@@ -368,18 +573,24 @@ function DashboardScreen() {
             </div>
           </CardLayout>
 
-          {/* Generos Musicales */}
-          <CardLayout custom="">
+          {/* Recomencaciones */}
+          <CardLayout custom="row-span-2">
             <CardTitleComponent>
               <div class="flex items-center gap-x-2">
                 <div class="inline-flex justify-center items-center w-10 h-10 rounded-full border-4 border-esmerald-50 bg-esmerald-100">
                   <i class="uil uil-headphones text-esmerald-500 text-2xl"></i>
                 </div>
                 <h3 class="text-base font-medium text-gray-800">
-                  Generos Musicales
+                  Recomendaciones
                 </h3>
               </div>
             </CardTitleComponent>
+
+            <PlayerWidget
+              data={recommendation ? recommendation : null}
+              display_list={true}
+              image={data_user ? data_user.images[1].url : null}
+            />
 
             {/*  */}
             {/* <RadarComponent
@@ -424,14 +635,14 @@ function DashboardScreen() {
             </CardTitleComponent>
           </CardLayout>
 
-          {/* Tabla */}
+          {/* Tracks */}
           <CardLayout custom="col-span-1 md:col-span-2 xl:col-span-3 2xl:col-span-2">
             <CardTitleComponent>
               <div class="flex items-center gap-x-2">
                 <div class="inline-flex justify-center items-center w-10 h-10 rounded-full border-4 border-esmerald-50 bg-esmerald-100">
                   <i class="uil uil-music text-esmerald-500 text-2xl"></i>
                 </div>
-                <h3 class="text-base font-medium text-gray-800">Top</h3>
+                <h3 class="text-base font-medium text-gray-800">Top Tracks</h3>
               </div>
             </CardTitleComponent>
 
@@ -456,6 +667,39 @@ function DashboardScreen() {
 
             <ArtistsTablesComponent
               data={topArtist ? topArtist.slice(0, 15) : null}
+            />
+          </CardLayout>
+
+          {/* Albums */}
+          <CardLayout custom="col-span-1 md:col-span-2 xl:col-span-3 2xl:col-span-2">
+            <CardTitleComponent>
+              <div class="flex items-center gap-x-2">
+                <div class="inline-flex justify-center items-center w-10 h-10 rounded-full border-4 border-esmerald-50 bg-esmerald-100">
+                  <i class="uil uil-music text-esmerald-500 text-2xl"></i>
+                </div>
+                <h3 class="text-base font-medium text-gray-800">Top Albums</h3>
+              </div>
+            </CardTitleComponent>
+
+            <AlbumsTableComponent
+              data={topAlbums ? topAlbums.slice(0, 15) : null}
+            />
+          </CardLayout>
+
+          {/* Genres */}
+          <CardLayout custom="col-span-1 md:col-span-2 xl:col-span-3 2xl:col-span-2">
+            <CardTitleComponent>
+              <div class="flex items-center gap-x-2">
+                <div class="inline-flex justify-center items-center w-10 h-10 rounded-full border-4 border-esmerald-50 bg-esmerald-100">
+                  <i class="uil uil-music text-esmerald-500 text-2xl"></i>
+                </div>
+                <h3 class="text-base font-medium text-gray-800">Top Genres</h3>
+              </div>
+            </CardTitleComponent>
+            {/*  */}
+            <GenresTableComponent
+              data={topGenres ? topGenres.slice(0, 15) : null}
+              total={topGenres ? topGenres.length : null}
             />
           </CardLayout>
         </GridLayout>

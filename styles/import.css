@@ -1,2 +1,3 @@
 @import url("../layouts/DashboardLayout/dashboard.styles.css");
 @import url("../components/Loaders/loaders.styles.css");
+@import url("../widgets/PlayerWidget/player-widget.styles.css");

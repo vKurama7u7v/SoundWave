@@ -68,3 +68,24 @@ export async function getTracksAudioFeatures(logout, data) {
     return null;
   }
 }
+
+// https://api.spotify.com/v1/recommendations?limit=10&seed_artists=4NHQUGzhtTLFvgF5SZesLK&seed_genres=classical%2Ccountry&seed_tracks=0c6xIDDpzE81m2q797ordA
+
+export async function getRecommendations(
+  logout,
+  limit,
+  seed_artists,
+  seed_tracks
+) {
+  try {
+    const url = `https://api.spotify.com/v1/recommendations?limit=${
+      limit ? limit : 10
+    }&seed_artists=${seed_artists}&seed_tracks=${seed_tracks}&market=SE`;
+
+    const result = await authFetch(url, null, logout);
+    return result ? result : null;
+  } catch (error) {
+    console.log("getRecommendations:", error);
+    return null;
+  }
+}

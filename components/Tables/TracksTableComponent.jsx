@@ -21,7 +21,7 @@ function TracksTableComponent(props) {
     }
   }, [dataset]);
 
-  if (!data) return null;
+  if (!dataset) return null;
 
   const onReset = () => {
     const all = document.querySelectorAll("audio");
@@ -68,7 +68,6 @@ function TracksTableComponent(props) {
   };
 
   const onSetPlayAudio = (e) => {
-    console.log(currentSong, e);
     const all = document.querySelectorAll("audio");
 
     all.forEach((audio) => {

@@ -28,6 +28,7 @@ module.exports = {
         },
         esmerald_transparent_50: "#4ade802c",
         esmerald_transparent_100: "#4ade805d",
+        esmerald_active_500: "#4ECC48",
       },
     },
   },

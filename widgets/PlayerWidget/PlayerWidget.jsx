@@ -214,7 +214,7 @@ function PlayerWidget(props) {
                       <div
                         className={`item w-full bg-gray-50 p-4 flex rounded ${
                           item.id === currentSong
-                            ? "bg-[#4ECC48]"
+                            ? "bg-esmerald_active_500"
                             : "bg-gray-50"
                         }`}
                       >

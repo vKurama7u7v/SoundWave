@@ -63,18 +63,18 @@ function DashboardScreen() {
 
   useEffect(() => {
     (async () => {
-      if (data_user) {
+      if (data_user && timeRange) {
         onSetTracksData(logout, timeRange.value);
         onSetTopArtistsData(logout, timeRange.value);
       }
     })();
-  }, [data_user && timeRange]);
+  }, [data_user, timeRange]);
 
   useEffect(() => {
     (async () => {
       if (idListArtists && idListTracks) {
         setRecommendation(
-          onSetRecommendationList(logout, 10, idListArtists, idListTracks)
+          onSetRecommendationList(logout, 50, idListArtists, idListTracks)
         );
       }
     })();
@@ -382,6 +382,7 @@ function DashboardScreen() {
           const { tracks } = response;
 
           if (tracks) {
+            console.log(tracks);
             const filter = onFilterTracks(tracks);
             setRecommendation(filter);
           }

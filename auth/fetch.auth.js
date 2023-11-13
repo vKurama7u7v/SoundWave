@@ -32,6 +32,7 @@ export async function authFetch(url, params, logout) {
         try {
           console.log("params", paramsTemp);
           const response = await fetch(url, paramsTemp);
+          console.log("response:", response);
           const result = await response.json();
           return result;
         } catch (error) {

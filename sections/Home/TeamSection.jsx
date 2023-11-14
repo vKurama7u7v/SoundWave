@@ -54,7 +54,7 @@ function CardItem(props) {
             </p>
           </div>
         </div>
-        <p className="mt-3 text-gray-500">
+        <p className="mt-3 text-gray-500 text-sm">
           {data.description ? data.description : ""}
         </p>
         {/* Social Brands */}

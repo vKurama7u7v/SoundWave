@@ -5,37 +5,37 @@ const moodMeter = [
     {
       position: 1,
       emotion: "Devastado",
-      img: "",
+      img: "https://i.pinimg.com/564x/20/eb/03/20eb0356401b68679964309407c73a56.jpg",
       mood: "9) Poco Energética y Negativa",
     },
     {
       position: 2,
       emotion: "Deseperanzado",
-      img: "",
+      img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-nArXiSG5RZoXwB4yy_hcHvBO79pqUBTJFbhe05FjZucEiuBtFI6H97nCyb6sGujTGo4&usqp=CAU",
       mood: "9) Poco Energética y Negativa",
     },
     {
       position: 3,
       emotion: "Desolado",
-      img: "",
+      img: "https://steamuserimages-a.akamaihd.net/ugc/382036172069762982/0354D4CCE23FB390FECADC8E55832A832DB899C3/?imw=5000&imh=5000&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false",
       mood: "9) Poco Energética y Negativa",
     },
     {
       position: 4,
       emotion: "Consumido",
-      img: "",
+      img: "https://media.tenor.com/T1QjLw5bPFAAAAAC/depressed-sad.gif",
       mood: "6) Poco Energetica y Positividad Moderada",
     },
     {
       position: 5,
       emotion: "Agotado",
-      img: "",
+      img: "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExcTA4bDh0dm9zZmh0MDdpeTVhcjQ2Njlrbjh5NWVzdTJtazJsa3VqNSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xchUhdPj5IRyw/giphy.gif",
       mood: "6) Poco Energetica y Positividad Moderada",
     },
     {
       position: 6,
       emotion: "Somnoliento",
-      img: "",
+      img: "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExNWV4anZoZnFoaHdpeGp2cWJmZmZ1MDZkeTNqdTAwYThoY3VodWtwNiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/RKS1pHGiUUZ2g/giphy.gif",
       mood: "6) Poco Energetica y Positividad Moderada",
     },
     {
@@ -425,7 +425,7 @@ const moodMeter = [
     {
       position: 7,
       emotion: "Centrado",
-      img: "",
+      img: "https://media.tenor.com/Q9I1LkA0v6QAAAAC/pepe-poli.gif",
       mood: "5) Moderadamente Energética y Positiva",
     },
     {

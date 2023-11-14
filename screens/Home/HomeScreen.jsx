@@ -58,55 +58,11 @@ function HomeScreen() {
 
   return (
     <>
-      <h1 className="text-3xl font-bold underline">Add TailwindCSS</h1>
+      <WaterDropSection handleLoginClick={handleLoginClick} />
 
-      <button onClick={handleLoginClick}>Sign In</button>
-
-      <WaterDropSection />
       <TeamSection />
     </>
   );
 }
 
 export default HomeScreen;
-
-// const [isAuth, setIsAuth] = useRecoilState(isAuthenticated);
-// const [refreshToken, setRefreshToken] = useRecoilState(spotifyRefreshToken);
-// const [responseToken, setResponseToken] =
-//   useRecoilState(spotifyResponseToken);
-
-// const authenticateUser = useCallback(
-//   async (code) => {
-//     // isAutehticated, responseToken, refreshToken
-//     try {
-//       let res;
-//       // Si refresToken existe,
-//       // entonces realiza una llamada a refresh token,
-//       // de lo contrario solicita un token nuevo
-
-//       if (refreshToken) {
-//         // TODO: Haz la llamada
-//         res = await spotifyAuthCall({ refresh_token: refreshToken });
-//       } else {
-//         // Solicita un token nuevo
-//         res = await spotifyAuthCall({ code: code });
-//       }
-
-//       if (res.access_token) {
-//         console.log(res);
-//         setRefreshToken(res?.refresh_token);
-//         setResponseToken(res);
-//         setIsAuth(true);
-
-//         // TODO: Redirigir a dashboard
-//         router.push("/auth");
-//       } else {
-//         console.log("El usuario no fue logeado");
-//         router.push("/auth");
-//       }
-//     } catch (error) {
-//       console.log("autheticateUser:", error);
-//     }
-//   },
-//   [setRefreshToken, setResponseToken, setIsAuth, refreshToken]
-// );

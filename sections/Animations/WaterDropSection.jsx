@@ -1,10 +1,15 @@
 import React from "react";
 import anime from "animejs";
+import HomeSection from "../Home/HomeSection";
 
-function WaterDropSection() {
+function WaterDropSection(props) {
+  const { handleLoginClick } = props;
+
   return (
     <>
       <div className="relative grid h-auto place-content-center px-8 bg-[#212121] overflow-hidden">
+        <HomeSection handleLoginClick={handleLoginClick} />
+
         <DotGrid />
       </div>
     </>
@@ -63,7 +68,7 @@ function DotGrid() {
   return (
     <>
       <div
-        className="grid w-fit"
+        className="grid w-fit absolute z-0"
         style={{ gridTemplateColumns: `repeat(${GRID_WIDTH}, 1fr)` }}
       >
         {dots}

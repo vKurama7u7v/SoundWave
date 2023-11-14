@@ -81,7 +81,7 @@ function ArtistsTablesComponent(props) {
                             </div>
                             <div className="w-60 h-2.5 bg-gray-200 rounded-full">
                               <div
-                                class="bg-green-400 h-2.5 rounded-full dark:bg-green-500"
+                                class="bg-green-400 h-2.5 rounded-full "
                                 style={{
                                   width: `${
                                     item.popularity ? item.popularity : ""

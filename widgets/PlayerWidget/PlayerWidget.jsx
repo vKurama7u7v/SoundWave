@@ -213,9 +213,7 @@ function PlayerWidget(props) {
                     <>
                       <div
                         className={`item w-full bg-gray-50 p-4 flex rounded ${
-                          item.id === currentSong
-                            ? "bg-esmerald_active_500"
-                            : "bg-gray-50"
+                          currentSong == item.id ? "bg-[#4ECC48]" : "bg-gray-50"
                         }`}
                       >
                         <div className="flex justify-between items-center w-full">

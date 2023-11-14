@@ -67,6 +67,13 @@ function DoughnutComponent(props) {
       colors: {
         enabled: true,
       },
+      // title: {
+      //   display: true,
+      //   text: "Custom Chart Title",
+      //   padding: {
+      //     bottom: 10,
+      //   },
+      // },
     },
     responsive: true,
     maintainAspectRatio: false,

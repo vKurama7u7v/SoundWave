@@ -34,6 +34,7 @@ import { getMoodTrack } from "@/utils/mood-meter.utils";
 import { orderBy, sortBy } from "lodash";
 import GenresTableComponent from "@/components/Tables/GenresTableComponent";
 import PlayerWidget from "@/widgets/PlayerWidget/PlayerWidget";
+import ImageMoodComponent from "@/components/Images/ImageMoodComponent";
 
 ChartJS.register(...registerables);
 
@@ -52,6 +53,7 @@ function DashboardScreen() {
   });
 
   const [stats, setStats] = useState(null);
+  const [mood, setMood] = useState(null);
   const [moodStats, setMoodStats] = useState(null);
   const [moodTracksStats, setMoodTracksStats] = useState(null);
 
@@ -102,6 +104,7 @@ function DashboardScreen() {
           setAudioFeatures(resAudioFeat);
 
           setStats(onSetStats(resAudioFeat.audio_features));
+          setMood(onSetMood(resAudioFeat.audio_features));
           setMoodStats(onSetMoodStats(resAudioFeat.audio_features));
           setMoodTracksStats(onSetMoodTracksStats(resAudioFeat.audio_features));
         }
@@ -157,6 +160,20 @@ function DashboardScreen() {
 
       return onSetDataAnalysis(sumatoria, data.length, labels);
     }
+  };
+
+  const onSetMood = (dataset) => {
+    if (dataset) {
+      const stats = onSetStats(dataset);
+
+      if (!stats) return null;
+
+      const mood = getMoodTrack(stats.values[1], stats.values[6]);
+
+      if (mood) return mood;
+    }
+
+    return null;
   };
 
   const onSetDataAnalysis = (data, total, labels) => {
@@ -382,7 +399,6 @@ function DashboardScreen() {
           const { tracks } = response;
 
           if (tracks) {
-            console.log(tracks);
             const filter = onFilterTracks(tracks);
             setRecommendation(filter);
           }
@@ -471,7 +487,7 @@ function DashboardScreen() {
         <div className="mb-6">
           <div class="relative inline-block">
             <button
-              class="relative z-10 flex items-center p-2 text-sm text-gray-600 bg-white border border-gray-100 rounded-md focus:border-blue-500 focus:ring-opacity-40 dark:focus:ring-opacity-40 focus:ring-blue-300 focus:ring focus:outline-none"
+              class="relative z-10 flex items-center p-2 text-sm text-gray-600 bg-white border border-gray-100 rounded-md focus:border-blue-500 focus:ring-opacity-40  focus:ring-blue-300 focus:ring focus:outline-none"
               onClick={() => setIsOpen(!isOpen)}
             >
               <span class="mx-1">
@@ -550,7 +566,11 @@ function DashboardScreen() {
               </div>
             </CardTitleComponent>
 
-            <BarComponent dataset={stats} label={"Value"} display={false} />
+            <BarComponent
+              dataset={stats ? stats : null}
+              label={"Value"}
+              display={false}
+            />
           </CardLayout>
 
           {/* Mood Tracks */}
@@ -560,20 +580,95 @@ function DashboardScreen() {
                 <div class="inline-flex justify-center items-center w-10 h-10 rounded-full border-4 border-esmerald-50 bg-esmerald-100">
                   <i class="uil uil-tachometer-fast-alt text-esmerald-500 text-2xl"></i>
                 </div>
-                <h3 class="text-base font-medium text-gray-800">
-                  Mis Canciones
-                </h3>
+                <h3 class="text-base font-medium text-gray-800">Overview</h3>
               </div>
             </CardTitleComponent>
             <div className="flex justify-between items-center">
-              {/* <div className="">mood</div> */}
+              <div className="flex flex-col items-center h-[10em] gap-3">
+                {/*  */}
+                <div class="bg-white w-36">
+                  <div class="flex items-center">
+                    <div class="relative w-3 h-3 bg-violet-500 rounded-full "></div>
+                    <p class="ml-2 text-gray-500 text-xs font-medium">
+                      Danceability 💃
+                    </p>
+                  </div>
+                  <div class="flex flex-col justify-start">
+                    <p class="text-sm font-bold text-left text-gray-600 ">
+                      {stats ? parseInt(stats.values[0] * 100) : 0}%
+                    </p>
+                    <div class=" bg-gray-200 rounded h-1.5 w-28">
+                      <div
+                        class="rounded bg-violet-500 h-1.5 transition-all ease-in"
+                        style={{
+                          width: `${
+                            stats ? parseInt(stats.values[0] * 100) : 0
+                          }%`,
+                        }}
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+
+                {/*  */}
+                <div class="bg-white w-36">
+                  <div class="flex items-center">
+                    <div class="relative w-3 h-3 bg-amber-400 rounded-full "></div>
+                    <p class="ml-2 text-gray-500 text-xs font-medium">
+                      Energy 🔋
+                    </p>
+                  </div>
+                  <div class="flex flex-col justify-start">
+                    <p class="text-sm font-bold text-left text-gray-600 ">
+                      {stats ? parseInt(stats.values[1] * 100) : 0}%
+                    </p>
+                    <div class=" bg-gray-200 rounded h-1.5 w-28">
+                      <div
+                        class="rounded bg-amber-400 h-1.5 transition-all ease-in"
+                        style={{
+                          width: `${
+                            stats ? parseInt(stats.values[1] * 100) : 0
+                          }%`,
+                        }}
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+
+                {/*  */}
+                <div class="bg-white w-36">
+                  <div class="flex items-center">
+                    <div class="relative w-3 h-3 bg-cyan-500 rounded-full "></div>
+                    <p class="ml-2 text-gray-500 text-xs font-medium">
+                      Valence 😃
+                    </p>
+                  </div>
+                  <div class="flex flex-col justify-start">
+                    <p class="text-sm font-bold text-left text-gray-600 ">
+                      {stats ? parseInt(stats.values[6] * 100) : 0}%
+                    </p>
+                    <div class=" bg-gray-200 rounded h-1.5 w-28">
+                      <div
+                        class="rounded bg-cyan-500 h-1.5 transition-all ease-in"
+                        style={{
+                          width: `${
+                            stats ? parseInt(stats.values[6] * 100) : 0
+                          }%`,
+                        }}
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <DoughnutComponent
-                dataset={moodTracksStats}
+                dataset={moodTracksStats ? moodTracksStats : null}
                 label={"# de Canciones"}
                 display={false}
                 position={"top"}
                 radius={70}
-                width={"100%"}
+                width={"50%"}
+                height={"10em"}
               />
             </div>
           </CardLayout>
@@ -586,7 +681,7 @@ function DashboardScreen() {
                   <i class="uil uil-headphones text-esmerald-500 text-2xl"></i>
                 </div>
                 <h3 class="text-base font-medium text-gray-800">
-                  Recomendaciones
+                  Recommended Songs
                 </h3>
               </div>
             </CardTitleComponent>
@@ -628,16 +723,16 @@ function DashboardScreen() {
           </CardLayout>
 
           <CardLayout>
-            <CardTitleComponent>
+            {/* <CardTitleComponent>
               <div class="flex items-center gap-x-2">
                 <div class="inline-flex justify-center items-center w-10 h-10 rounded-full border-4 border-esmerald-50 bg-esmerald-100">
-                  <i class="uil uil-grin text-esmerald-500 text-2xl"></i>
+                  <i class="uil uil-laughing text-esmerald-500 text-2xl"></i>
                 </div>
-                <h3 class="text-base font-medium text-gray-800">
-                  Recomendación del Día
-                </h3>
+                <h3 class="text-base font-medium text-gray-800">Tu Mood</h3>
               </div>
-            </CardTitleComponent>
+            </CardTitleComponent> */}
+
+            <ImageMoodComponent mood={mood ? mood : null} />
           </CardLayout>
 
           {/* Tracks */}
@@ -664,7 +759,7 @@ function DashboardScreen() {
             <CardTitleComponent>
               <div class="flex items-center gap-x-2">
                 <div class="inline-flex justify-center items-center w-10 h-10 rounded-full border-4 border-esmerald-50 bg-esmerald-100">
-                  <i class="uil uil-music text-esmerald-500 text-2xl"></i>
+                  <i class="fa-solid fa-user-astronaut text-esmerald-500 text-2xl"></i>
                 </div>
                 <h3 class="text-base font-medium text-gray-800">Top Artists</h3>
               </div>
@@ -680,7 +775,7 @@ function DashboardScreen() {
             <CardTitleComponent>
               <div class="flex items-center gap-x-2">
                 <div class="inline-flex justify-center items-center w-10 h-10 rounded-full border-4 border-esmerald-50 bg-esmerald-100">
-                  <i class="uil uil-music text-esmerald-500 text-2xl"></i>
+                  <i class="fa-solid fa-compact-disc text-esmerald-500 text-2xl"></i>
                 </div>
                 <h3 class="text-base font-medium text-gray-800">Top Albums</h3>
               </div>
@@ -696,7 +791,7 @@ function DashboardScreen() {
             <CardTitleComponent>
               <div class="flex items-center gap-x-2">
                 <div class="inline-flex justify-center items-center w-10 h-10 rounded-full border-4 border-esmerald-50 bg-esmerald-100">
-                  <i class="uil uil-music text-esmerald-500 text-2xl"></i>
+                  <i class="fa-solid fa-guitar text-esmerald-500 text-2xl"></i>
                 </div>
                 <h3 class="text-base font-medium text-gray-800">Top Genres</h3>
               </div>

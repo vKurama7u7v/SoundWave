@@ -77,7 +77,6 @@ export async function getRecommendations(
 ) {
   try {
     if (!limit && !seed_artists && !seed_tracks) return null;
-    console.log({ limit, seed_artists, seed_tracks });
 
     const url = `https://api.spotify.com/v1/recommendations?market=SE&limit=${
       limit ? limit : 10

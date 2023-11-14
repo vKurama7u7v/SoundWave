@@ -489,7 +489,7 @@ const moodMeter = [
     {
       position: 7,
       emotion: "Animado",
-      img: "",
+      img: "https://i.giphy.com/media/s384SHekNXXqg/giphy.webp",
       mood: "4) Energética y Positividad Moderada",
     },
     {
@@ -681,5 +681,65 @@ export const getMoodTrack = (energy, valence) => {
   } catch (error) {
     console.log("getMoodTrack", error);
     return "No se identifico la emoción";
+  }
+};
+
+export const getDanceability = (danceability) => {
+  if (danceability) {
+    if (danceability > 0.85) {
+      return "Altamente Apto para Bailar";
+    } else if (danceability > 0.75 && danceability <= 0.85) {
+      return "Bueno para Bailar";
+    } else if (danceability > 0.65 && danceability <= 0.75) {
+      return "Adecuado para Bailar";
+    } else if (danceability > 0.55 && danceability <= 0.65) {
+      return "Moderadamente Apto para Bailar";
+    } else if (danceability > 0.45 && danceability <= 0.55) {
+      return "Menos Propicio para Bailar";
+    } else if (danceability <= 0.45) {
+      return "Bajo para Bailar";
+    } else {
+      return "N/A";
+    }
+  }
+};
+
+export const getEnergy = (energy) => {
+  if (energy) {
+    if (energy > 0.9) {
+      return "Muy Alta";
+    } else if (energy > 0.75 && energy <= 0.9) {
+      return "Alta";
+    } else if (energy > 0.6 && energy <= 0.75) {
+      return "Moderadamente Alta";
+    } else if (energy > 0.45 && energy <= 0.6) {
+      return "Moderada";
+    } else if (energy > 0.3 && energy <= 0.45) {
+      return "Moderadamente Baja";
+    } else if (energy <= 0.3) {
+      return "Baja";
+    } else {
+      return "N/A";
+    }
+  }
+};
+
+export const getValence = (valence) => {
+  if (valence) {
+    if (valence > 0.85) {
+      return "Muy Positivo";
+    } else if (valence > 0.65 && valence <= 0.85) {
+      return "Positivo";
+    } else if (valence > 0.5 && valence <= 0.65) {
+      return "Moderadamente Positivo";
+    } else if (valence > 0.35 && energy <= 0.5) {
+      return "Neutral";
+    } else if (valence > 0.2 && valence <= 0.35) {
+      return "Moderadamente Negativo";
+    } else if (valence <= 0.2) {
+      return "Negativo";
+    } else {
+      return "N/A";
+    }
   }
 };

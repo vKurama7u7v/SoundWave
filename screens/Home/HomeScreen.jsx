@@ -6,6 +6,8 @@ import sign from "jwt-encode";
 import useAuth from "@/hooks/useAuth";
 import { SPOTIFY_AUTH_URL } from "@/utils/const.utils";
 import { spotifyAuthCall } from "@/auth/authentication.auth";
+import TeamSection from "@/sections/Home/TeamSection";
+import WaterDropSection from "@/sections/Animations/WaterDropSection";
 
 function HomeScreen() {
   const router = useRouter();
@@ -55,11 +57,14 @@ function HomeScreen() {
   };
 
   return (
-    <div>
+    <>
       <h1 className="text-3xl font-bold underline">Add TailwindCSS</h1>
 
       <button onClick={handleLoginClick}>Sign In</button>
-    </div>
+
+      <WaterDropSection />
+      <TeamSection />
+    </>
   );
 }
 

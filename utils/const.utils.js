@@ -1,6 +1,6 @@
 // SPOTIFY AUTH
-export const SPOTIFY_CALLBACK_HOST = "http://localhost:3000/";
-// export const SPOTIFY_CALLBACK_HOST = "https://soundwaveio.vercel.app/";
+// export const SPOTIFY_CALLBACK_HOST = "http://localhost:3000/";
+export const SPOTIFY_CALLBACK_HOST = "https://soundwaveio.vercel.app/";
 
 const scopes = "user-read-private user-read-email user-top-read";
 

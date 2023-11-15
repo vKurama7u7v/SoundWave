@@ -75,9 +75,7 @@ function DashboardScreen() {
   useEffect(() => {
     (async () => {
       if (idListArtists && idListTracks) {
-        setRecommendation(
-          onSetRecommendationList(logout, 50, idListArtists, idListTracks)
-        );
+        onSetRecommendationList(logout, 50, idListArtists, idListTracks);
       }
     })();
   }, [idListArtists && idListTracks]);
@@ -403,9 +401,12 @@ function DashboardScreen() {
             setRecommendation(filter);
           }
         }
+
+        return null;
       }
     } catch (error) {
       console.log("onSetRecommendationList:", error);
+      return null;
     }
   };
 

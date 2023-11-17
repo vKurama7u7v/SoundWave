@@ -31,10 +31,11 @@ import {
   getTracksAudioFeatures,
 } from "@/api/user.api";
 import { getMoodTrack } from "@/utils/mood-meter.utils";
-import { orderBy, sortBy } from "lodash";
+import { orderBy, size, sortBy } from "lodash";
 import GenresTableComponent from "@/components/Tables/GenresTableComponent";
 import PlayerWidget from "@/widgets/PlayerWidget/PlayerWidget";
 import ImageMoodComponent from "@/components/Images/ImageMoodComponent";
+import BreadrumsTitleComponent from "@/components/Titles/BreadrumsTitleComponent";
 
 ChartJS.register(...registerables);
 
@@ -464,25 +465,7 @@ function DashboardScreen() {
   return (
     <>
       <section className="dashboard__kpis m-6  xl:mx-10">
-        <div className="flex justify-between">
-          <h1 className="text-xl font-semibold text-gray-600 capitalize">
-            Dashboard
-          </h1>
-          {/* Breadrumbs */}
-          <div class="flex items-center pb-6 overflow-x-auto whitespace-nowrap">
-            <a href="#" class="text-gray-600 ">
-              <i class="uil uil-estate text-lg"></i>
-            </a>
-
-            <span class="mx-2 text-gray-500 ">
-              <i class="uil uil-angle-right text-lg"></i>
-            </span>
-
-            <a href="#" class="text-esmerald-500 font-medium">
-              Dashboard
-            </a>
-          </div>
-        </div>
+        <BreadrumsTitleComponent title={"Dashboard"} />
 
         {/* Dropdown */}
         <div className="mb-6">
@@ -690,7 +673,13 @@ function DashboardScreen() {
             <PlayerWidget
               data={recommendation ? recommendation : null}
               display_list={true}
-              image={data_user ? data_user.images[1].url : null}
+              image={
+                data_user
+                  ? size(data_user.images) > 0
+                    ? data_user.images[1].url
+                    : ""
+                  : ""
+              }
             />
 
             {/*  */}

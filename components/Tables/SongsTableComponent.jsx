@@ -76,14 +76,7 @@ function SongsTableComponent(props) {
                         scope="col"
                         class="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 "
                       >
-                        Genres
-                      </th>
-
-                      <th
-                        scope="col"
-                        class="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 "
-                      >
-                        Actions
+                        Emotion
                       </th>
                     </tr>
                   </thead>
@@ -134,8 +127,6 @@ function SongsTableComponent(props) {
                                   </td>
                                   <td class="px-4 py-4 text-sm text-gray-500 whitespace-nowrap">
                                     {item.album ? item.album.name : ""}
-                                    <br />
-                                    {item.id ? item.id : ""}
                                   </td>
                                   <td class="px-4 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
                                     <div class="inline-flex items-center px-3 py-1 rounded-full gap-x-2 text-emerald-500 bg-emerald-100/60 ">
@@ -155,24 +146,6 @@ function SongsTableComponent(props) {
                                           ""
                                         )}
                                       </h2>
-                                    </div>
-                                  </td>
-
-                                  <td class="px-4 py-4 text-sm text-gray-500 whitespace-nowrap">
-                                    <div class="flex items-center gap-x-6">
-                                      {item.preview_url == "" ? (
-                                        <></>
-                                      ) : (
-                                        <>
-                                          <a
-                                            href={item.preview_url}
-                                            target="_blank"
-                                            class="text-blue-500 transition-colors duration-200 hover:text-indigo-500 focus:outline-none"
-                                          >
-                                            Download
-                                          </a>
-                                        </>
-                                      )}
                                     </div>
                                   </td>
                                 </tr>

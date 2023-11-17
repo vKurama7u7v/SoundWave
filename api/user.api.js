@@ -35,7 +35,15 @@ export async function getMyFullTop(logout, top, params1, params2) {
     const { items: p2 } = part2;
 
     // Combinando los 2 arrays
-    const result = p1.concat(p2.splice(1));
+    let result = null;
+    if (p1.length > 0 && p2.length > 0) {
+      result = p1.concat(p2.splice(1));
+      return result ? result : null;
+    }
+
+    if (p1.length > 0) {
+      result = p1;
+    }
     return result ? result : null;
   } catch (error) {
     console.log("getMyFullTop:", error);

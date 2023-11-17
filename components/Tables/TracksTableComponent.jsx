@@ -193,7 +193,7 @@ function TracksTableComponent(props) {
                                   {item.name ? item.name : ""}
                                 </h2>
                                 <p class="text-xs font-normal text-gray-600 ">
-                                  <p class="text-xs font-normal text-gray-600 ">
+                                  <p class="text-xs font-normal text-gray-600 line-clamp-1">
                                     {size(item.artists) == 0 ? (
                                       <>N/A</>
                                     ) : (

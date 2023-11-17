@@ -385,14 +385,14 @@ function DashboardScreen() {
       if (tracks.length > 0) seed_tracks = tracks.toString();
 
       if (seed_artists && seed_tracks) {
-        const response = await getRecommendations(
-          logout,
-          limit,
-          seed_artists,
-          seed_tracks
-        );
+        // const response = await getRecommendations(
+        //   logout,
+        //   limit,
+        //   seed_artists,
+        //   seed_tracks
+        // );
 
-        // const response = null;
+        const response = null;
 
         if (response) {
           const { tracks } = response;

@@ -1,136 +1,428 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 import { map, size } from "lodash";
 import { getMoodTrack } from "@/utils/mood-meter.utils";
+import MusicLoaderComponent from "../Loaders/MusicLoaderComponent";
 
 function SongsTableComponent(props) {
-  const { data, features } = props;
+  const { data: dataset, features, identifier, reload } = props;
 
-  if (!data) {
-    return null;
-  }
+  const [currentSong, setCurrentSong] = useState(null);
+  const [isPlay, setIsPlay] = useState(false);
+  const [data, setData] = useState(null);
 
-  const items = data;
+  useEffect(() => {
+    if (dataset) {
+      setData(dataset);
+
+      if (data) {
+        onReset();
+      }
+    }
+  }, [dataset, reload]);
+
+  if (!data && !features && !identifier) return null;
+
+  const onReset = () => {
+    const all = document.querySelectorAll(`audio.${identifier}`);
+
+    all.forEach((audio) => {
+      if (parseInt(audio.getAttribute("id"))) {
+        stopSound(audio);
+      }
+    });
+
+    setIsPlay(false);
+    setCurrentSong(null);
+  };
+
+  // Play audio sound
+  const playSound = (audio) => {
+    audio.play();
+    setIsPlay(true);
+  };
+
+  // Pause audio sound
+  const pauseSound = (audio) => {
+    audio.pause();
+    setIsPlay(false);
+  };
+
+  // Stop audio sound
+  const stopSound = (audio) => {
+    audio.pause();
+    audio.currentTime = 0;
+  };
+
+  const onEnded = (next) => {
+    setIsPlay(false);
+
+    if (next <= data.length) {
+      const item = data[next - 1];
+      console.log("Siguiente cancion");
+      onSetPlayAudio(item.id);
+      setCurrentSong(item.id);
+    } else {
+      console.log("finished playing");
+    }
+  };
+
+  const onSetPlayAudio = (e) => {
+    const all = document.querySelectorAll(`audio.${identifier}`);
+
+    all.forEach((audio) => {
+      if (parseInt(audio.getAttribute("id")) !== e) {
+        stopSound(audio);
+      }
+    });
+
+    let element;
+
+    if (e === currentSong) {
+      element = document.getElementById(currentSong);
+      if (!isPlay) {
+        playSound(element);
+      } else {
+        pauseSound(element);
+      }
+    } else {
+      element = document.getElementById(e);
+      playSound(element);
+    }
+  };
+
   return (
     <>
-      <section class="container pt-6">
-        <div class="flex flex-col">
-          <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-            <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-              <div class="overflow-hidden border border-gray-200 md:rounded-lg">
-                <table class="min-w-full divide-y divide-gray-200 overflow-x-scroll">
-                  <thead class="bg-gray-50 ">
+      <section className="container pt-6">
+        <div className="flex flex-col">
+          <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+              <div className="overflow-hidden border border-gray-200 md:rounded-lg">
+                <table className="min-w-full divide-y divide-gray-200 overflow-x-scroll">
+                  <thead className="bg-gray-50 ">
                     <tr>
                       <th
                         scope="col"
-                        class="py-3.5 px-4 text-sm font-normal text-left rtl:text-right text-gray-500 "
+                        className="py-3.5 px-4 text-sm font-normal text-left rtl:text-right text-gray-500 "
                       >
-                        <div class="flex items-center gap-x-3">
-                          <button class="flex items-center gap-x-2">
+                        <div className="flex items-center gap-x-3">
+                          <button className="flex items-center gap-x-2">
                             <span>#</span>
-
-                            {/* <svg
-                              class="h-3"
-                              viewBox="0 0 10 11"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M2.13347 0.0999756H2.98516L5.01902 4.79058H3.86226L3.45549 3.79907H1.63772L1.24366 4.79058H0.0996094L2.13347 0.0999756ZM2.54025 1.46012L1.96822 2.92196H3.11227L2.54025 1.46012Z"
-                                fill="currentColor"
-                                stroke="currentColor"
-                                stroke-width="0.1"
-                              />
-                              <path
-                                d="M0.722656 9.60832L3.09974 6.78633H0.811638V5.87109H4.35819V6.78633L2.01925 9.60832H4.43446V10.5617H0.722656V9.60832Z"
-                                fill="currentColor"
-                                stroke="currentColor"
-                                stroke-width="0.1"
-                              />
-                              <path
-                                d="M8.45558 7.25664V7.40664H8.60558H9.66065C9.72481 7.40664 9.74667 7.42274 9.75141 7.42691C9.75148 7.42808 9.75146 7.42993 9.75116 7.43262C9.75001 7.44265 9.74458 7.46304 9.72525 7.49314C9.72522 7.4932 9.72518 7.49326 9.72514 7.49332L7.86959 10.3529L7.86924 10.3534C7.83227 10.4109 7.79863 10.418 7.78568 10.418C7.77272 10.418 7.73908 10.4109 7.70211 10.3534L7.70177 10.3529L5.84621 7.49332C5.84617 7.49325 5.84612 7.49318 5.84608 7.49311C5.82677 7.46302 5.82135 7.44264 5.8202 7.43262C5.81989 7.42993 5.81987 7.42808 5.81994 7.42691C5.82469 7.42274 5.84655 7.40664 5.91071 7.40664H6.96578H7.11578V7.25664V0.633865C7.11578 0.42434 7.29014 0.249976 7.49967 0.249976H8.07169C8.28121 0.249976 8.45558 0.42434 8.45558 0.633865V7.25664Z"
-                                fill="currentColor"
-                                stroke="currentColor"
-                                stroke-width="0.3"
-                              />
-                            </svg> */}
                           </button>
                         </div>
                       </th>
 
                       <th
                         scope="col"
-                        class="px-4 pl-0 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 "
+                        className="px-4 pl-0 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 "
                       >
                         Song
                       </th>
 
                       <th
                         scope="col"
-                        class="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 "
+                        className="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 "
                       >
                         Album
                       </th>
 
                       <th
                         scope="col"
-                        class="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 "
+                        className="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 "
                       >
-                        Emotion
+                        Mood
                       </th>
                     </tr>
                   </thead>
-                  <tbody class="bg-white divide-y divide-gray-200 ">
-                    {!items ? (
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {!data ? (
+                      <></>
+                    ) : (
+                      <>
+                        {size(data) == 0 ? (
+                          <></>
+                        ) : (
+                          <>
+                            <>
+                              {data.map((item, index) => (
+                                <>
+                                  <tr>
+                                    <td className="px-4 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
+                                      <div className="inline-flex items-center gap-x-3">
+                                        {item.id == currentSong ? (
+                                          <>
+                                            {isPlay ? (
+                                              <div className="flex justify-center items-center w-1 h-1">
+                                                <MusicLoaderComponent />
+                                              </div>
+                                            ) : (
+                                              <span>{index + 1}</span>
+                                            )}
+                                          </>
+                                        ) : (
+                                          <span>{index + 1}</span>
+                                        )}
+                                      </div>
+                                    </td>
+
+                                    <td className="px-4 pl-0 py-4 text-sm text-gray-500 whitespace-nowrap">
+                                      <div className="flex items-center gap-x-2">
+                                        <div className="w-10 h-10 relative">
+                                          <button
+                                            className={
+                                              item.id === currentSong
+                                                ? !isPlay
+                                                  ? "absolute z-20 left-0 top-0 w-10 h-10 flex items-center justify-center opacity-30 hover:opacity-100 transition ease-in-out "
+                                                  : "absolute z-20 left-0 top-0 w-10 h-10 flex items-center justify-center opacity-100 hover:opacity-100 transition ease-in-out "
+                                                : "absolute z-20 left-0 top-0 w-10 h-10 flex items-center justify-center opacity-30 hover:opacity-100 transition ease-in-out "
+                                            }
+                                            //   "absolute left-0 top-0 w-10 h-10 flex items-center justify-center opacity-20 hover:opacity-100 transition ease-in-out "
+                                            onClick={() => {
+                                              setCurrentSong(item.id);
+                                              onSetPlayAudio(item.id);
+                                            }}
+                                            disabled={
+                                              item.preview_url ? false : true
+                                            }
+                                          >
+                                            {item.id === currentSong ? (
+                                              <>
+                                                {!isPlay ? (
+                                                  <i className="bx bx-play-circle text-3xl text-white"></i>
+                                                ) : (
+                                                  <i className="bx bx-pause-circle text-3xl text-white"></i>
+                                                )}
+                                              </>
+                                            ) : (
+                                              <i className="bx bx-play-circle text-3xl text-white"></i>
+                                            )}
+                                          </button>
+
+                                          <div className="absolute left-0 top-0 w-10 h-10 rounded bg-black opacity-10"></div>
+                                          <img
+                                            className="object-cover w-10 h-10 rounded"
+                                            src={
+                                              item.album
+                                                ? item.album.images[0].url
+                                                : ""
+                                            }
+                                            alt=""
+                                          />
+                                        </div>
+                                        <div>
+                                          <h2 className="text-sm font-medium text-gray-800">
+                                            {item.name ? item.name : ""}
+                                          </h2>
+                                          <p className="text-xs font-normal text-gray-600 line-clamp-1">
+                                            {size(item.artists) == 0 ? (
+                                              <>N/A</>
+                                            ) : (
+                                              item.artists.map(
+                                                (artist, index) => (
+                                                  <>
+                                                    {index == 0 ? (
+                                                      <>{artist.name}</>
+                                                    ) : (
+                                                      <>, {artist.name}</>
+                                                    )}
+                                                  </>
+                                                )
+                                              )
+                                            )}
+                                          </p>
+                                        </div>
+                                      </div>
+                                    </td>
+                                    <td className="px-4 py-4 text-sm text-gray-500 whitespace-nowrap">
+                                      {item.album ? item.album.name : ""}
+                                    </td>
+                                    <td className="px-4 py-4 text-sm font-medium text-gray-700 whitespace-nowrap flex">
+                                      <div className="inline-flex items-center px-3 py-1 rounded-full gap-x-2 text-emerald-500 bg-emerald-100/60 ">
+                                        <h2 className="text-sm font-normal">
+                                          {features ? (
+                                            <>
+                                              {
+                                                getMoodTrack(
+                                                  features.audio_features[index]
+                                                    .energy,
+                                                  features.audio_features[index]
+                                                    .valence
+                                                ).emotion
+                                              }
+                                            </>
+                                          ) : (
+                                            ""
+                                          )}
+                                        </h2>
+                                      </div>
+                                      <div className="hidden">
+                                        <audio
+                                          id={item.id ? item.id : ""}
+                                          className={`${
+                                            identifier ? identifier : null
+                                          } block w-full max-w-md mx-auto opacity-0 right-0 top-0`}
+                                          controls
+                                          style={{
+                                            opacity: "0.5",
+                                            height: "30px",
+                                            width: "50px",
+                                          }}
+                                          onEnded={() => {
+                                            onEnded(index + 2);
+                                          }}
+                                          src={
+                                            item.preview_url
+                                              ? item.preview_url
+                                              : ""
+                                          }
+                                        />
+                                      </div>
+                                    </td>
+                                  </tr>
+                                </>
+                              ))}
+                            </>
+                          </>
+                        )}
+                      </>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </>
+  );
+}
+
+export default SongsTableComponent;
+
+/*
+
+<tbody className="bg-white divide-y divide-gray-200 ">
+                    {!data ? (
                       <tr>No hay nd</tr>
                     ) : (
                       <>
-                        {size(items) == 0 ? (
+                        {size(data) == 0 ? (
                           <>Array Vacio</>
                         ) : (
                           <>
-                            {items.map((item, index) => (
+                            {data.map((item, index) => (
                               <>
                                 <tr>
-                                  <td class="px-4 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
-                                    <div class="inline-flex items-center gap-x-3">
-                                      <span>{index + 1}</span>
+                                  <td className="px-4 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
+                                    <div className="inline-flex items-center gap-x-3">
+                                      {item.id == currentSong ? (
+                                        <>
+                                          {isPlay ? (
+                                            <div className="flex justify-center items-center w-1 h-1">
+                                              <MusicLoaderComponent />
+                                            </div>
+                                          ) : (
+                                            <span>{index + 1}</span>
+                                          )}
+                                        </>
+                                      ) : (
+                                        <span>{index + 1}</span>
+                                      )}
                                     </div>
                                   </td>
 
-                                  <td class="px-4 pl-0 py-4 text-sm text-gray-500 whitespace-nowrap">
-                                    <div class="flex items-center gap-x-2">
-                                      <img
-                                        class="object-cover w-10 h-10 rounded"
-                                        src={
-                                          item.album
-                                            ? item.album.images[0].url
-                                            : ""
-                                        }
-                                        alt=""
-                                      />
+                                  <td className="px-4 pl-0 py-4 text-sm text-gray-500 whitespace-nowrap">
+                                    <div className="flex items-center gap-x-2">
+                                      <div className="w-10 h-10 relative">
+                                        <button
+                                          className={
+                                            item.id === currentSong
+                                              ? !isPlay
+                                                ? "absolute z-20 left-0 top-0 w-10 h-10 flex items-center justify-center opacity-30 hover:opacity-100 transition ease-in-out "
+                                                : "absolute z-20 left-0 top-0 w-10 h-10 flex items-center justify-center opacity-100 hover:opacity-100 transition ease-in-out "
+                                              : "absolute z-20 left-0 top-0 w-10 h-10 flex items-center justify-center opacity-30 hover:opacity-100 transition ease-in-out "
+                                          }
+                                          //   "absolute left-0 top-0 w-10 h-10 flex items-center justify-center opacity-20 hover:opacity-100 transition ease-in-out "
+                                          onClick={() => {
+                                            setCurrentSong(item.id);
+                                            onSetPlayAudio(item.id);
+                                          }}
+                                        >
+                                          {item.id === currentSong ? (
+                                            <>
+                                              {!isPlay ? (
+                                                <i className="bx bx-play-circle text-3xl text-white"></i>
+                                              ) : (
+                                                <i className="bx bx-pause-circle text-3xl text-white"></i>
+                                              )}
+                                            </>
+                                          ) : (
+                                            <i className="bx bx-play-circle text-3xl text-white"></i>
+                                          )}
+                                        </button>
+                                        <div className="hidden">
+                                          <audio
+                                            id={item.id ? item.id : ""}
+                                            className={`${
+                                              identifier ? identifier : null
+                                            } block w-full max-w-md mx-auto opacity-0 right-0 top-0`}
+                                            controls
+                                            style={{
+                                              opacity: "0.5",
+                                              height: "30px",
+                                              width: "50px",
+                                            }}
+                                            onEnded={() => {
+                                              onEnded(index + 2);
+                                            }}
+                                            src={
+                                              item.preview_url
+                                                ? item.preview_url
+                                                : ""
+                                            }
+                                          />
+                                        </div>
+                                        <div className="absolute left-0 top-0 w-10 h-10 rounded bg-black opacity-10"></div>
+                                        <img
+                                          className="object-cover w-10 h-10 rounded"
+                                          src={
+                                            item.album
+                                              ? item.album.images[0].url
+                                              : ""
+                                          }
+                                          alt=""
+                                        />
+                                      </div>
                                       <div>
-                                        <h2 class="text-sm font-medium text-gray-800">
+                                        <h2 className="text-sm font-medium text-gray-800">
                                           {item.name ? item.name : ""}
                                         </h2>
-                                        <p class="text-xs font-normal text-gray-600 ">
+                                        <p className="text-xs font-normal text-gray-600 line-clamp-1">
                                           {size(item.artists) == 0 ? (
                                             <>N/A</>
                                           ) : (
-                                            item.artists.map((artist) => (
-                                              <>{artist.name}</>
-                                            ))
+                                            item.artists.map(
+                                              (artist, index) => (
+                                                <>
+                                                  {index == 0 ? (
+                                                    <>{artist.name}</>
+                                                  ) : (
+                                                    <>, {artist.name}</>
+                                                  )}
+                                                </>
+                                              )
+                                            )
                                           )}
                                         </p>
                                       </div>
                                     </div>
                                   </td>
-                                  <td class="px-4 py-4 text-sm text-gray-500 whitespace-nowrap">
+                                  <td className="px-4 py-4 text-sm text-gray-500 whitespace-nowrap">
                                     {item.album ? item.album.name : ""}
                                   </td>
-                                  <td class="px-4 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
-                                    <div class="inline-flex items-center px-3 py-1 rounded-full gap-x-2 text-emerald-500 bg-emerald-100/60 ">
-                                      <h2 class="text-sm font-normal">
+                                  <td className="px-4 py-4 text-sm font-medium text-gray-700 whitespace-nowrap flex">
+                                    <div className="inline-flex items-center px-3 py-1 rounded-full gap-x-2 text-emerald-500 bg-emerald-100/60 ">
+                                      <h2 className="text-sm font-normal">
                                         {features ? (
                                           <>
                                             {
@@ -156,14 +448,4 @@ function SongsTableComponent(props) {
                       </>
                     )}
                   </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-    </>
-  );
-}
-
-export default SongsTableComponent;
+*/

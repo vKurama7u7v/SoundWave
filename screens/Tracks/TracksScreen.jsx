@@ -6,13 +6,21 @@ import CardLayout from "@/layouts/CardLayout";
 import BreadrumsTitleComponent from "@/components/Titles/BreadrumsTitleComponent";
 import SongsTableComponent from "@/components/Tables/SongsTableComponent";
 import { getMyFullTop, getTracksAudioFeatures } from "@/api/user.api";
+import {
+  getRecentlyAudioFeatures,
+  getRecentlyPlayedTracks,
+} from "@/api/tracks.api";
+import RecentlyPlayedTableComponent from "@/components/Tables/RecentlyPlayedTableComponent";
 
 function TracksScreen() {
   const [topTracks, setTopTracks] = useState(null);
-  const [recent, setTecent] = useState(null);
   const [audioFeatures, setAudioFeatures] = useState(null);
 
+  const [recentlyPlayed, setRecentlyPlayed] = useState(null);
+  const [recentlyAudioFeatures, setRecentlyAudioFeatures] = useState(null);
+
   const [isOpen, setIsOpen] = useState(false);
+  const [tab, setTab] = useState(0);
   const [timeRange, setTimeRange] = useState({
     name: "Last 4 Weeks",
     value: "short_term",
@@ -28,6 +36,14 @@ function TracksScreen() {
     })();
   }, [data_user, timeRange]);
 
+  useEffect(() => {
+    (async () => {
+      if (data_user) {
+        onSetRecentlyPlayedTracks(logout);
+      }
+    })();
+  }, [data_user]);
+
   // ===== Canciones =====
   const onSetTracksData = async (logout, time_range) => {
     try {
@@ -38,8 +54,6 @@ function TracksScreen() {
         `?limit=50&offset=0&time_range=${time_range}`,
         `?limit=50&offset=49&time_range=${time_range}`
       );
-
-      console.log("RES:", resTracks);
 
       if (resTracks) {
         setTopTracks(resTracks);
@@ -59,6 +73,22 @@ function TracksScreen() {
     if (time_range.value !== timeRange.value) {
       setTimeRange(time_range);
       setIsOpen(false);
+    }
+  };
+
+  const onSetRecentlyPlayedTracks = async (logout) => {
+    try {
+      const result = await getRecentlyPlayedTracks(logout);
+      if (result) {
+        setRecentlyPlayed(result);
+
+        const audio_features = await getRecentlyAudioFeatures(logout, result);
+        if (audio_features) {
+          setRecentlyAudioFeatures(audio_features);
+        }
+      }
+    } catch (error) {
+      console.log("onSetRecentlyPlayedTracks:", error);
     }
   };
 
@@ -137,30 +167,52 @@ function TracksScreen() {
           <div class="border-b border-gray-200 mb-6">
             <ul class="flex flex-wrap -mb-px text-sm font-medium text-center text-gray-500 ">
               <li class="me-2">
-                <a
-                  href="#"
-                  class="inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300  group"
+                <button
+                  class={`inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg group ${
+                    tab == 0
+                      ? "text-esmerald-500 border-esmerald-500 active"
+                      : "hover:text-gray-600 hover:border-gray-300 border-transparent"
+                  }`}
+                  onClick={() => setTab(0)}
                 >
                   <i class="uil uil-music mr-2 text-lg"></i>
-                  Top
-                </a>
+                  Top 99
+                </button>
               </li>
+
               <li class="me-2">
-                <a
-                  href="#"
-                  class="inline-flex items-center justify-center p-4 text-esmerald-500 border-b-2 border-esmerald-500 rounded-t-lg active  group"
-                  aria-current="page"
+                <button
+                  class={`inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg group ${
+                    tab == 1
+                      ? "text-esmerald-500 border-esmerald-500 active"
+                      : "hover:text-gray-600 hover:border-gray-300 border-transparent"
+                  }`}
+                  onClick={() => setTab(1)}
                 >
-                  <i class="uil uil-refresh mr-2 text-lg"></i>
-                  Recientes
-                </a>
+                  <i class="uil uil-sync mr-2 text-lg"></i>
+                  Recently Played
+                </button>
               </li>
             </ul>
           </div>
 
           {/*  */}
-          <div className="tab-1">
-            <SongsTableComponent data={topTracks} features={audioFeatures} />
+          <div className={tab == 0 ? "" : "hidden"}>
+            <SongsTableComponent
+              data={topTracks}
+              features={audioFeatures}
+              identifier={"top__tracks"}
+              reload={tab}
+            />
+          </div>
+
+          <div className={tab == 1 ? "" : "hidden"}>
+            <RecentlyPlayedTableComponent
+              dataset={recentlyPlayed}
+              features={recentlyAudioFeatures}
+              identifier={"recentrly_tracks"}
+              reload={tab}
+            />
           </div>
         </CardLayout>
       </section>

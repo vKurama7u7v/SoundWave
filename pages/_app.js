@@ -1,4 +1,5 @@
 import React, { useMemo, useState, useEffect } from "react";
+import * as Unicons from "@iconscout/react-unicons";
 import { useRouter } from "next/router";
 
 import AuthContext from "@/context/AuthContext.context";
@@ -82,6 +83,7 @@ export default function App({ Component, pageProps }) {
   }
   return (
     <AuthContext.Provider value={authData}>
+      <Unicons.UilReact />
       <Component {...pageProps} />
     </AuthContext.Provider>
   );

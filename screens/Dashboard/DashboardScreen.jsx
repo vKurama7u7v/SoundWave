@@ -546,7 +546,7 @@ function DashboardScreen() {
                 <div class="inline-flex justify-center items-center w-10 h-10 rounded-full border-4 border-esmerald-50 bg-esmerald-100">
                   <i class="uil uil-analysis text-esmerald-500 text-2xl"></i>
                 </div>
-                <h3 class="text-base font-medium text-gray-800">Analisis</h3>
+                <h3 class="text-base font-medium text-gray-800">Análisis</h3>
               </div>
             </CardTitleComponent>
 

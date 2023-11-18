@@ -36,3 +36,30 @@ export async function getRecentlyAudioFeatures(logout, data) {
     return null;
   }
 }
+
+export async function getTrackByID(logout, id) {
+  try {
+    if (!id) return null;
+
+    const url = `https://api.spotify.com/v1/tracks/${id}`;
+    const result = await authFetch(url, null, logout);
+
+    return result ? result : null;
+  } catch (error) {
+    console.log("getTrackByID:", error);
+    return null;
+  }
+}
+
+export async function getTrackAudioFeaturesByID(logout, id) {
+  try {
+    if (!id) return null;
+    const url = `https://api.spotify.com/v1/audio-features/${id}`;
+    const result = await authFetch(url, null, logout);
+
+    return result ? result : null;
+  } catch (error) {
+    console.log("getTrackAudioFeaturesByID:", error);
+    return null;
+  }
+}

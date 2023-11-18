@@ -34,7 +34,7 @@ function TracksScreen() {
         onSetTracksData(logout, timeRange.value);
       }
     })();
-  }, [data_user, timeRange]);
+  }, [data_user && timeRange]);
 
   useEffect(() => {
     (async () => {

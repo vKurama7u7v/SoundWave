@@ -39,7 +39,7 @@ function HomeScreen() {
 
       // Enviando tokens
       login(access_token, response.refresh_token);
-      router.push("/auth");
+      router.push("/app");
     }
     setLoading(false);
   };

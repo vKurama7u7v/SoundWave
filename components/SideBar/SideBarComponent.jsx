@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 
 function SideBarComponent(props) {
@@ -34,27 +35,27 @@ function SideBarComponent(props) {
 
             <ul class="menu-links">
               <li class="nav-link">
-                <a href="#" className="nav-link--active">
+                <Link href="/app" className="">
                   <i class="uil uil-estate icon"></i>
                   <span class="text nav-text">Dashboard</span>
-                </a>
+                </Link>
               </li>
 
-              <li class="nav-link">
-                <a href="#">
+              {/* <li class="nav-link">
+                <Link href="/app/tracks">
                   <i class="uil uil-graph-bar icon"></i>
                   <span class="text nav-text">Tendencias</span>
-                </a>
-              </li>
+                </Link>
+              </li> */}
 
               <li class="nav-link">
-                <a href="#">
+                <Link href="/app/tracks">
                   <i class="uil uil-music-note icon"></i>
                   <span class="text nav-text">Música</span>
-                </a>
+                </Link>
               </li>
 
-              <li class="nav-link">
+              {/* <li class="nav-link">
                 <a href="#">
                   <i class="uil uil-headphones-alt icon"></i>
                   <span class="text nav-text">Artistas</span>
@@ -62,11 +63,11 @@ function SideBarComponent(props) {
               </li>
 
               <li class="nav-link">
-                <a href="#">
+                <a href="#" className="nav-link--active">
                   <i class="uil uil-music icon"></i>
                   <span class="text nav-text">Géneros</span>
                 </a>
-              </li>
+              </li> */}
             </ul>
           </div>
 

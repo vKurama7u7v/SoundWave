@@ -570,7 +570,7 @@ function DashboardScreen() {
             <div className="flex justify-between items-center">
               <div className="flex flex-col items-center h-[10em] gap-3">
                 {/*  */}
-                <div class="bg-white w-36">
+                <div class=" w-36">
                   <div class="flex items-center">
                     <div class="relative w-3 h-3 bg-violet-500 rounded-full "></div>
                     <p class="ml-2 text-gray-500 text-xs font-medium">
@@ -595,7 +595,7 @@ function DashboardScreen() {
                 </div>
 
                 {/*  */}
-                <div class="bg-white w-36">
+                <div class=" w-36">
                   <div class="flex items-center">
                     <div class="relative w-3 h-3 bg-amber-400 rounded-full "></div>
                     <p class="ml-2 text-gray-500 text-xs font-medium">
@@ -620,7 +620,7 @@ function DashboardScreen() {
                 </div>
 
                 {/*  */}
-                <div class="bg-white w-36">
+                <div class=" w-36">
                   <div class="flex items-center">
                     <div class="relative w-3 h-3 bg-cyan-500 rounded-full "></div>
                     <p class="ml-2 text-gray-500 text-xs font-medium">

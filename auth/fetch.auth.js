@@ -57,18 +57,11 @@ export async function geniusFetch(url, logout) {
       token = jwt.decode(token);
       // Token valido
       if (token.access_token) {
-        const paramsTemp = {
-          method: "GET",
-          headers: {
-            "X-RapidAPI-Key": process.env.RAPIDAPI_KEY,
-            "X-RapidAPI-Host": "genius-song-lyrics1.p.rapidapi.com",
-          },
-        };
+        const req = `${url}&access_token=${process.env.GENIUS_ACCESS_TOKEN}`;
 
         try {
-          const response = await fetch(url, paramsTemp);
+          const response = await fetch(req);
           const result = await response.json();
-          console.log(result);
           return result;
         } catch (error) {
           console.log("geniusFetch", error);

@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { map, size } from "lodash";
 import { getMoodTrack } from "@/utils/mood-meter.utils";
 import MusicLoaderComponent from "../Loaders/MusicLoaderComponent";
+import Link from "next/link";
 
 function SongsTableComponent(props) {
   const { data: dataset, features, identifier, reload } = props;
@@ -210,8 +211,12 @@ function SongsTableComponent(props) {
                                           />
                                         </div>
                                         <div>
-                                          <h2 className="text-sm font-medium text-gray-800">
-                                            {item.name ? item.name : ""}
+                                          <h2 className="text-sm font-medium text-gray-800 hover:text-esmerald_btn_normal_500">
+                                            <Link
+                                              href={`/app/tracks/${item.id}`}
+                                            >
+                                              {item.name ? item.name : ""}
+                                            </Link>
                                           </h2>
                                           <p className="text-xs font-normal text-gray-600 line-clamp-1">
                                             {size(item.artists) == 0 ? (

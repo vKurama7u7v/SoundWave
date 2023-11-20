@@ -1,8 +1,12 @@
+import useAuth from "@/hooks/useAuth";
 import Link from "next/link";
 import React from "react";
 
 function SideBarComponent(props) {
   const { isActive, onSetActive } = props;
+
+  const { logout } = useAuth();
+
   return (
     <>
       <nav className={isActive ? "sidebar" : "sidebar close"}>
@@ -73,7 +77,7 @@ function SideBarComponent(props) {
 
           <div class="bottom-content">
             <li class="">
-              <a href="#">
+              <a href="#" onClick={() => logout()}>
                 <i class="bx bx-log-out icon"></i>
                 <span class="text nav-text">Cerrar Sesión</span>
               </a>

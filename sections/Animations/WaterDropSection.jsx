@@ -7,7 +7,7 @@ function WaterDropSection(props) {
 
   return (
     <>
-      <div className="relative grid h-auto place-content-center px-8 bg-[#212121] overflow-hidden">
+      <div className="relative grid h-auto place-content-center px-8 bg-gradient-to-r from-[#141417] via-[#1F1C1F] to-[#141417] overflow-hidden">
         <HomeSection handleLoginClick={handleLoginClick} />
 
         <DotGrid />
@@ -55,7 +55,7 @@ function DotGrid() {
           key={`${i}-${j}`}
         >
           <div
-            className="dot-point h-2 w-2 rounded-full bg-gradient-to-b from-slate-700 to-slate-400 opacity-30 group-hover:from-indigo-600 group-hover:to-white"
+            className="dot-point h-2 w-2 rounded-full bg-gradient-to-b from-slate-700 to-slate-400 opacity-30 group-hover:from-indigo-600 group-hover:to-green-400"
             data-index={index}
           ></div>
         </div>

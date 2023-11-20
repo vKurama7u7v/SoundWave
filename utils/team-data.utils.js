@@ -14,7 +14,7 @@ export const getTeamData = [
     user: "DanielHF2403",
     rol: "Data Architect",
     description:
-      "Diseña, implementa y administra la arquitectura de datos. Mantiene las bases de datos, los sistemas de almacenamiento y las herramientas de análisis de datos. Mantiene comunicación clara con los usuarios y los demás miembros del equipo de inteligencia empresarial en el área de tecnología de la información.",
+      "Diseña, implementa y administra la arquitectura de datos. Mantiene las bases de datos, los sistemas de almacenamiento y las herramientas de análisis de datos. Mantiene comunicación clara con los usuarios y los demás miembros del equipo de inteligencia empresarial en el área de TI.",
     avatar: "https://avatars.githubusercontent.com/u/58312422?v=4",
     github: "https://github.com/DanielHF2403",
     website: null,
@@ -28,15 +28,16 @@ export const getTeamData = [
     avatar: "https://avatars.githubusercontent.com/u/72474524?v=4",
     github: "https://github.com/vKurama7u7v",
     website: "https://aureliomarin.netlify.app/",
+    linkedin: "https://www.linkedin.com/in/aureliomb/",
   },
   {
     name: "Hector Jesús Gonzalez Haro",
-    user: "DanielHF2403",
+    user: "HJGH441",
     rol: "BI Designer",
     description:
       "Colabora con el analista de negocios en el diseño de soluciones de inteligencia empresarial respaldadas por tecnología. Desarrolla e implementa, mantiene y optimiza prototipos de soluciones de inteligencia empresarial.",
-    avatar: "https://avatars.githubusercontent.com/u/58312422?v=4",
-    github: "https://github.com/DanielHF2403",
+    avatar: "https://avatars.githubusercontent.com/u/124411546?v=4",
+    github: "https://github.com/HJGH441",
     website: null,
   },
 ];

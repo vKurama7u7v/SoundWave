@@ -191,7 +191,10 @@ function TracksTableComponent(props) {
                               </div>
                               <div>
                                 <h2 class="text-sm font-medium text-gray-800 hover:text-esmerald_btn_normal_500">
-                                  <Link href={`/app/tracks/${item.id}`}>
+                                  <Link
+                                    target="_blank"
+                                    href={`/app/tracks/${item.id}`}
+                                  >
                                     {item.name ? item.name : ""}
                                   </Link>
                                 </h2>

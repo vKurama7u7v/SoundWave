@@ -30,12 +30,18 @@ import {
   getRecommendations,
   getTracksAudioFeatures,
 } from "@/api/user.api";
-import { getMoodTrack } from "@/utils/mood-meter.utils";
+import {
+  getDanceability,
+  getEnergy,
+  getMoodTrack,
+  getValence,
+} from "@/utils/mood-meter.utils";
 import { orderBy, size, sortBy } from "lodash";
 import GenresTableComponent from "@/components/Tables/GenresTableComponent";
 import PlayerWidget from "@/widgets/PlayerWidget/PlayerWidget";
 import ImageMoodComponent from "@/components/Images/ImageMoodComponent";
 import BreadrumsTitleComponent from "@/components/Titles/BreadrumsTitleComponent";
+import ChartTooltipComponent from "@/components/Tooltips/ChartTooltipComponent";
 
 ChartJS.register(...registerables);
 
@@ -385,14 +391,14 @@ function DashboardScreen() {
       if (tracks.length > 0) seed_tracks = tracks.toString();
 
       if (seed_artists && seed_tracks) {
-        // const response = await getRecommendations(
-        //   logout,
-        //   limit,
-        //   seed_artists,
-        //   seed_tracks
-        // );
+        const response = await getRecommendations(
+          logout,
+          limit,
+          seed_artists,
+          seed_tracks
+        );
 
-        const response = null;
+        // const response = null;
 
         if (response) {
           const { tracks } = response;
@@ -569,80 +575,35 @@ function DashboardScreen() {
             </CardTitleComponent>
             <div className="flex justify-between items-center">
               <div className="flex flex-col items-center h-[10em] gap-3">
-                {/*  */}
-                <div class=" w-36">
-                  <div class="flex items-center">
-                    <div class="relative w-3 h-3 bg-violet-500 rounded-full "></div>
-                    <p class="ml-2 text-gray-500 text-xs font-medium">
-                      Danceability 💃
-                    </p>
-                  </div>
-                  <div class="flex flex-col justify-start">
-                    <p class="text-sm font-bold text-left text-gray-600 ">
-                      {stats ? parseInt(stats.values[0] * 100) : 0}%
-                    </p>
-                    <div class=" bg-gray-200 rounded h-1.5 w-28">
-                      <div
-                        class="rounded bg-violet-500 h-1.5 transition-all ease-in"
-                        style={{
-                          width: `${
-                            stats ? parseInt(stats.values[0] * 100) : 0
-                          }%`,
-                        }}
-                      ></div>
-                    </div>
-                  </div>
-                </div>
+                <ChartTooltipComponent
+                  title={"Danceability 💃"}
+                  value={stats ? stats.values[0] : null}
+                  tooltip={stats ? getDanceability(stats.values[0]) : null}
+                  small={true}
+                  primaryColor={"bg-violet-500"}
+                  tooltipColor={""}
+                  svgColor={""}
+                />
 
-                {/*  */}
-                <div class=" w-36">
-                  <div class="flex items-center">
-                    <div class="relative w-3 h-3 bg-amber-400 rounded-full "></div>
-                    <p class="ml-2 text-gray-500 text-xs font-medium">
-                      Energy 🔋
-                    </p>
-                  </div>
-                  <div class="flex flex-col justify-start">
-                    <p class="text-sm font-bold text-left text-gray-600 ">
-                      {stats ? parseInt(stats.values[1] * 100) : 0}%
-                    </p>
-                    <div class=" bg-gray-200 rounded h-1.5 w-28">
-                      <div
-                        class="rounded bg-amber-400 h-1.5 transition-all ease-in"
-                        style={{
-                          width: `${
-                            stats ? parseInt(stats.values[1] * 100) : 0
-                          }%`,
-                        }}
-                      ></div>
-                    </div>
-                  </div>
-                </div>
+                <ChartTooltipComponent
+                  title={"Energy 🔋"}
+                  value={stats ? stats.values[1] : null}
+                  tooltip={stats ? getEnergy(stats.values[1]) : null}
+                  small={true}
+                  primaryColor={"bg-amber-400"}
+                  tooltipColor={""}
+                  svgColor={""}
+                />
 
-                {/*  */}
-                <div class=" w-36">
-                  <div class="flex items-center">
-                    <div class="relative w-3 h-3 bg-cyan-500 rounded-full "></div>
-                    <p class="ml-2 text-gray-500 text-xs font-medium">
-                      Valence 😃
-                    </p>
-                  </div>
-                  <div class="flex flex-col justify-start">
-                    <p class="text-sm font-bold text-left text-gray-600 ">
-                      {stats ? parseInt(stats.values[6] * 100) : 0}%
-                    </p>
-                    <div class=" bg-gray-200 rounded h-1.5 w-28">
-                      <div
-                        class="rounded bg-cyan-500 h-1.5 transition-all ease-in"
-                        style={{
-                          width: `${
-                            stats ? parseInt(stats.values[6] * 100) : 0
-                          }%`,
-                        }}
-                      ></div>
-                    </div>
-                  </div>
-                </div>
+                <ChartTooltipComponent
+                  title={"Valence 😃"}
+                  value={stats ? stats.values[6] : null}
+                  tooltip={stats ? getValence(stats.values[6]) : null}
+                  small={true}
+                  primaryColor={"bg-cyan-500"}
+                  tooltipColor={""}
+                  svgColor={""}
+                />
               </div>
 
               <DoughnutComponent
@@ -651,7 +612,7 @@ function DashboardScreen() {
                 display={false}
                 position={"top"}
                 radius={70}
-                width={"50%"}
+                width={"100%"}
                 height={"10em"}
               />
             </div>

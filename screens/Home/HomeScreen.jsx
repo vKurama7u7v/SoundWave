@@ -8,6 +8,8 @@ import { SPOTIFY_AUTH_URL } from "@/utils/const.utils";
 import { spotifyAuthCall } from "@/auth/authentication.auth";
 import TeamSection from "@/sections/Home/TeamSection";
 import WaterDropSection from "@/sections/Animations/WaterDropSection";
+import FeaturesSection from "@/sections/Home/FeaturesSection";
+import FooterComponent from "@/components/Footer/FooterComponent";
 
 function HomeScreen() {
   const router = useRouter();
@@ -60,7 +62,11 @@ function HomeScreen() {
     <>
       <WaterDropSection handleLoginClick={handleLoginClick} />
 
+      <FeaturesSection />
+
       <TeamSection />
+
+      <FooterComponent />
     </>
   );
 }

@@ -39,17 +39,15 @@ function HomeSection(props) {
             <div className="mt-5 max-w-2xl text-center mx-auto">
               <h1 className="block font-bold text-gray-200 text-4xl md:text-5xl lg:text-6xl ">
                 Let{"'"}s Listen{" "}
-                <span className="bg-clip-text bg-gradient-to-tl from-teal-400 to-esmerald_active_500 text-transparent">
+                <span className="bg-clip-text bg-gradient-to-tl from-teal-400 to-green-400 text-transparent">
                   Together
                 </span>
               </h1>
             </div>
             {/* End Title */}
             <div className="mt-5 max-w-3xl text-center mx-auto">
-              <p className=" text-gray-300 text-sm">
-                <span className="font-semibold text-esmerald_active_500">
-                  SoundWave
-                </span>{" "}
+              <p className=" text-gray-200 text-sm">
+                <span className="font-semibold text-green-400">SoundWave</span>{" "}
                 se basa en datos de Spotify para brindar información valiosa a
                 usuarios, ofreciendo perspicacia sobre preferencias, tendencias
                 y evolución musical, mejorando la experiencia musical

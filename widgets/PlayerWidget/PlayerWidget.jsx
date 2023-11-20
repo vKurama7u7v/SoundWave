@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { map, size } from "lodash";
 import MusicLoaderComponent from "@/components/Loaders/MusicLoaderComponent";
+import Link from "next/link";
 
 function PlayerWidget(props) {
   const { data: dataset, image } = props;
@@ -138,7 +139,13 @@ function PlayerWidget(props) {
               <div className="info pb-2">
                 <p className="">{currentSong ? "" : null}</p>
                 <h2 className="text-sm font-medium text-gray-600 line-clamp-2 pr-4 w-48 leading-4">
-                  {track ? track[0].name : ""}
+                  <Link
+                    target="_blank"
+                    className="hover:text-esmerald-500"
+                    href={`/app/tracks/${track ? track[0].id : ""}`}
+                  >
+                    {track ? track[0].name : ""}
+                  </Link>
                 </h2>
                 <p className="text-xs font-medium text-gray-500 line-clamp-1 pr-4 w-48">
                   {track ? (
@@ -279,7 +286,13 @@ function PlayerWidget(props) {
                                     : "text-gray-800"
                                 }`}
                               >
-                                {item.name ? item.name : ""}
+                                <Link
+                                  target="_blank"
+                                  className="hover:text-esmerald_btn_normal_500"
+                                  href={`/app/tracks/${item.id ? item.id : ""}`}
+                                >
+                                  {item.name ? item.name : ""}
+                                </Link>
                               </h2>
                               <p class="text-xs font-normal text-gray-600">
                                 {size(item.artists) == 0 ? (

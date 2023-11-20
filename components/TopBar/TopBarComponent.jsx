@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import { size } from "lodash";
+import useAuth from "@/hooks/useAuth";
 
 function TopBarComponent(props) {
   const { user, isActive, onSetActive, mode, onSetMode } = props;
 
   const [isOpen, setIsOpen] = useState(false);
+
+  const { logout } = useAuth();
 
   const onSetDropdown = () => {
     setIsOpen(!isOpen);
@@ -88,18 +91,18 @@ function TopBarComponent(props) {
                     </div>
                   </div>
                   <div class="p-1">
-                    <a
+                    {/* <span class="inline-flex flex-1 justify-end gap-1 text-xs capitalize text-gray-400">
+                      <kbd class="min-w-[1em] font-sans">⌥</kbd>
+                      <kbd class="min-w-[1em] font-sans">⇧</kbd>
+                      <kbd class="min-w-[1em] font-sans">P</kbd>
+                    </span> */}
+                    {/* <a
                       href="#"
                       class="flex w-full items-center gap-2 rounded-md px-3 py-2 text-gray-700 hover:bg-gray-100"
                     >
                       <i class="uil uil-user"></i>
                       Mi Perfil
-                      {/* <span class="inline-flex flex-1 justify-end gap-1 text-xs capitalize text-gray-400">
-                        <kbd class="min-w-[1em] font-sans">⌥</kbd>
-                        <kbd class="min-w-[1em] font-sans">⇧</kbd>
-                        <kbd class="min-w-[1em] font-sans">P</kbd>
-                      </span> */}
-                    </a>
+                    </a> */}
 
                     <a
                       href="#"
@@ -112,22 +115,23 @@ function TopBarComponent(props) {
                         {mode ? <>Oscuro</> : <>Claro</>}
                       </span>
                     </a>
-                    <a
+
+                    {/* <a
                       href="#"
                       class="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
                     >
                       <i class="uil uil-setting"></i>
                       Configuraciones
-                    </a>
+                    </a> */}
                   </div>
                   <div class="p-1">
-                    <a
-                      href="#"
+                    <button
                       class="flex w-full items-center gap-2 rounded-md px-3 py-2 text-gray-700 hover:bg-gray-100"
+                      onClick={() => logout()}
                     >
                       <i class="uil uil-power"></i>
                       Cerrar Sesión
-                    </a>
+                    </button>
                   </div>
                 </div>
               </div>

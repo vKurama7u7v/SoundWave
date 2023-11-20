@@ -1,16 +1,55 @@
+import React, { useState, useEffect } from "react";
 import { size } from "lodash";
-import React from "react";
 
 function DetailsTracksSection(props) {
   const { data, lyrics_url } = props;
 
+  const [isPlay, setIsPlay] = useState(false);
+
   if (!data) return null;
+
+  // Play audio sound
+  const playSound = (audio) => {
+    audio.play();
+    setIsPlay(true);
+  };
+
+  // Pause audio sound
+  const pauseSound = (audio) => {
+    audio.pause();
+    setIsPlay(false);
+  };
+
+  // Stop audio sound
+  const stopSound = (audio) => {
+    audio.pause();
+    audio.currentTime = 0;
+  };
+
+  const onEnded = () => {
+    setIsPlay(false);
+  };
+
+  const onSetPlayAudio = (e) => {
+    const element = document.getElementById(e);
+    if (!isPlay) {
+      playSound(element);
+    } else {
+      pauseSound(element);
+    }
+  };
+
+  console.log(data);
 
   return (
     <>
       <div className="flex p-6 justify-between gap-12">
         <div className="left  w-full flex flex-col justify-between">
-          <div className="music-player-component--icon relative active">
+          <div
+            className={`music-player-component--icon relative ${
+              isPlay ? "active" : ""
+            }`}
+          >
             <span class="loader"></span>
             <span className="note-particle">
               <i class="fa-solid fa-music"></i>
@@ -72,7 +111,37 @@ function DetailsTracksSection(props) {
         </div>
         <div className="right w-60">
           <div className="w-60 h-60 relative track--right">
-            <Portrait />
+            <Portrait image={data ? data.album : null} />
+            <div className="absolute left-0 top-0 w-60 h-60 rounded bg-black opacity-5"></div>
+            <button
+              className="absolute w-60 h-60 opacity-50 hover:opacity-100 transition ease-in-out"
+              onClick={() => {
+                onSetPlayAudio(data ? data.id : "");
+              }}
+              disabled={data ? (data.preview_url ? false : true) : true}
+            >
+              <>
+                {!isPlay ? (
+                  <i className="bx bx-play-circle text-[100px] text-white"></i>
+                ) : (
+                  <i className="bx bx-pause-circle text-[100px] text-white"></i>
+                )}
+              </>
+            </button>
+            <audio
+              id={data ? data.id : ""}
+              src={data ? data.preview_url : ""}
+              className={`hidden absolute w-full max-w-md mx-auto opacity-0 right-0 top-0`}
+              controls
+              style={{
+                opacity: "0.5",
+                height: "30px",
+                width: "50px",
+              }}
+              onEnded={() => {
+                onEnded();
+              }}
+            ></audio>
           </div>
         </div>
       </div>
@@ -81,10 +150,16 @@ function DetailsTracksSection(props) {
 }
 
 const Portrait = ({ image, title, alt }) => {
+  if (image.length === 0) return null;
   return (
     <>
       <div className="w-60 h-60 bg-slate-100 rounded-lg absolute top-0 right-0">
-        <img src="" alt="" title="" />
+        <img
+          src={image.images[1].url}
+          alt=""
+          title=""
+          className="object-cover rounded-lg"
+        />
       </div>
     </>
   );

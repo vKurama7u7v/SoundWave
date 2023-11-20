@@ -83,7 +83,6 @@ export default function App({ Component, pageProps }) {
   }
   return (
     <AuthContext.Provider value={authData}>
-      <Unicons.UilReact />
       <Component {...pageProps} />
     </AuthContext.Provider>
   );

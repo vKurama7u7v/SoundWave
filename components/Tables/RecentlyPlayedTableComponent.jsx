@@ -238,6 +238,7 @@ function RecentlyPlayedTableComponent(props) {
                                         <div>
                                           <h2 className="text-sm font-medium text-gray-800 hover:text-esmerald_btn_normal_500">
                                             <Link
+                                              target="_blank"
                                               href={`/app/tracks/${item.track.id}`}
                                             >
                                               {item.track.name

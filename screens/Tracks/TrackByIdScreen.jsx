@@ -200,7 +200,7 @@ const TrackByIdScreen = (props) => {
         <section
           className={tab == 0 ? "my-6 grid gap-4 xl:gap-6" : "hidden my-6"}
         >
-          <div className="grid grid-cols-3 gap-4 md:grid-cols-2 xl:gap-6 xl:grid-cols-3">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:gap-6 xl:grid-cols-3">
             <CardLayout>
               <CardTitleComponent>
                 <div class="flex items-center gap-x-2">
@@ -261,7 +261,7 @@ const TrackByIdScreen = (props) => {
                 </div>
 
                 <div className="grid gap-2">
-                  <div className="flex gap-3">
+                  <div className="flex gap-3 flex-wrap">
                     <SimpleTooltipComponent
                       icon={""}
                       title={"Key"}
@@ -341,21 +341,25 @@ const TrackByIdScreen = (props) => {
             </CardLayout>
           </div>
 
-          <CardLayout>
-            <CardTitleComponent>
-              <div class="flex items-center gap-x-2">
-                <div class="inline-flex justify-center items-center w-10 h-10 rounded-full border-4 border-esmerald-50 bg-esmerald-100">
-                  <i class="uil uil-analysis text-esmerald-500 text-2xl"></i>
-                </div>
-                <h3 class="text-2xl font-extrabold text-gray-800">
-                  Descripción
-                </h3>
-              </div>
-            </CardTitleComponent>
-            <p className="text-gray-600 text-justify" translate="es">
-              {lyrics ? lyrics.description.plain : null}
-            </p>
-          </CardLayout>
+          {!lyrics ? null : lyrics.description.plain === "?" ? null : (
+            <>
+              <CardLayout>
+                <CardTitleComponent>
+                  <div class="flex items-center gap-x-2">
+                    <div class="inline-flex justify-center items-center w-10 h-10 rounded-full border-4 border-esmerald-50 bg-esmerald-100">
+                      <i class="uil uil-comment-alt-exclamation text-esmerald-500 text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-extrabold text-gray-800">
+                      Descripción
+                    </h3>
+                  </div>
+                </CardTitleComponent>
+                <p className="text-gray-600 text-justify" translate="es">
+                  {lyrics ? lyrics.description.plain : null}
+                </p>
+              </CardLayout>
+            </>
+          )}
 
           <div className="grid grid-cols-3 gap-4 md:grid-cols-2 xl:gap-6 xl:grid-cols-3">
             {!lyrics
@@ -392,6 +396,44 @@ const TrackByIdScreen = (props) => {
                   </>
                 ))
               : null}
+          </div>
+
+          <div className="flex flex-wrap gap-6">
+            {!track
+              ? null
+              : size(track.artists) == 0
+              ? null
+              : track.artists.map((artist) => (
+                  <>
+                    {" "}
+                    <CardLayout custom="flex flex-col justify-center max-w-xs p-6 sm:px-12">
+                      <div class="space-y-4 text-center divide-y ">
+                        <div class="my-2 space-y-1">
+                          <h2 class="text-xl font-semibold text-gray-700">
+                            {artist.name}
+                          </h2>
+                          <p class="px-5 text-xs sm:text-base font-semibold text-gray-400 capitalize">
+                            {artist.type}
+                          </p>
+                        </div>
+                        <div class="flex justify-center pt-2 space-x-4 align-center ">
+                          <a
+                            rel="noopener noreferrer"
+                            target="_blank"
+                            href={
+                              artist.external_urls
+                                ? artist.external_urls.spotify
+                                : "#"
+                            }
+                            class="p-2 rounded-md text-gray-500 hover:text-esmerald_btn_normal_500 transition ease-in-out"
+                          >
+                            <i class="fa-brands fa-spotify"></i>
+                          </a>
+                        </div>
+                      </div>
+                    </CardLayout>
+                  </>
+                ))}
           </div>
         </section>
 

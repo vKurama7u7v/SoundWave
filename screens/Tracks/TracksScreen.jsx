@@ -11,6 +11,7 @@ import {
   getRecentlyPlayedTracks,
 } from "@/api/tracks.api";
 import RecentlyPlayedTableComponent from "@/components/Tables/RecentlyPlayedTableComponent";
+import ExportTracksComponent from "@/components/Tables/ExportTracksComponent";
 
 function TracksScreen() {
   const [topTracks, setTopTracks] = useState(null);
@@ -193,14 +194,28 @@ function TracksScreen() {
                   Recently Played
                 </button>
               </li>
+
+              <li class="me-2">
+                <button
+                  class={`inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg group ${
+                    tab == 2
+                      ? "text-esmerald-500 border-esmerald-500 active"
+                      : "hover:text-gray-600 hover:border-gray-300 border-transparent"
+                  }`}
+                  onClick={() => setTab(2)}
+                >
+                  <i class="uil uil-file-download-alt mr-2 text-lg"></i>
+                  Export Data
+                </button>
+              </li>
             </ul>
           </div>
 
           {/*  */}
           <div className={tab == 0 ? "" : "hidden"}>
             <SongsTableComponent
-              data={topTracks}
-              features={audioFeatures}
+              data={topTracks ? topTracks : null}
+              features={audioFeatures ? audioFeatures : null}
               identifier={"top__tracks"}
               reload={tab}
             />
@@ -208,9 +223,19 @@ function TracksScreen() {
 
           <div className={tab == 1 ? "" : "hidden"}>
             <RecentlyPlayedTableComponent
-              dataset={recentlyPlayed}
-              features={recentlyAudioFeatures}
-              identifier={"recentrly_tracks"}
+              dataset={recentlyPlayed ? recentlyPlayed : null}
+              features={recentlyAudioFeatures ? recentlyAudioFeatures : null}
+              identifier={"recentrly__tracks"}
+              reload={tab}
+            />
+          </div>
+
+          <div className={tab == 2 ? "" : "hidden"}>
+            <ExportTracksComponent
+              data={topTracks ? topTracks : null}
+              features={audioFeatures ? audioFeatures : null}
+              time_range={timeRange ? timeRange : null}
+              identifier={"export__tracks"}
               reload={tab}
             />
           </div>

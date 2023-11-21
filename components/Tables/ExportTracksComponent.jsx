@@ -38,7 +38,7 @@ function ExportTracksComponent(props) {
           <span class=" mx-1">Download</span>
         </button>
       </div>
-      <div class="relative overflow-x-auto sm:rounded-lg">
+      <div class="relative sm:rounded-lg overflow-x-auto">
         <table
           id={identifier ? identifier : ""}
           ref={tableRef}
@@ -48,77 +48,101 @@ function ExportTracksComponent(props) {
             <tr>
               <th
                 scope="col"
-                class="py-3.5 px-4 text-sm font-bold text-left rtl:text-right text-gray-500 "
+                class="py-4 px-4 text-sm font-bold text-left rtl:text-right text-gray-500 "
               >
                 #
               </th>
 
               <th
                 scope="col"
-                class="px-4 pl-0 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 "
+                class="px-4 pl-0 py-4 text-sm font-normal text-left rtl:text-right text-gray-500 "
               >
                 Song
               </th>
 
               <th
                 scope="col"
-                class="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 "
+                class="px-4 py-4 text-sm font-normal text-left rtl:text-right text-gray-500 "
               >
                 Artists
               </th>
               <th
                 scope="col"
-                class="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 "
+                class="px-4 py-4 text-sm font-normal text-left rtl:text-right text-gray-500 "
               >
                 Album
               </th>
               <th
                 scope="col"
-                class="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 "
+                class="px-4 py-4 text-sm font-normal text-left rtl:text-right text-gray-500 "
+              >
+                Image Album
+              </th>
+              <th
+                scope="col"
+                class="px-4 py-4 text-sm font-normal text-left rtl:text-right text-gray-500 "
               >
                 Username
               </th>
               <th
                 scope="col"
-                class="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 "
+                class="px-4 py-4 text-sm font-normal text-left rtl:text-right text-gray-500 "
+              >
+                Avatar
+              </th>
+              <th
+                scope="col"
+                class="px-4 py-4 text-sm font-normal text-left rtl:text-right text-gray-500 "
               >
                 Time Range
               </th>
               <th
                 scope="col"
-                class="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 "
+                class="px-4 py-4 text-sm font-normal text-left rtl:text-right text-gray-500 "
               >
                 URL
               </th>
               <th
                 scope="col"
-                class="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 "
+                class="px-4 py-4 text-sm font-normal text-left rtl:text-right text-gray-500 "
               >
                 Danceability
               </th>
               <th
                 scope="col"
-                class="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 "
+                class="px-4 py-4 text-sm font-normal text-left rtl:text-right text-gray-500 "
               >
                 Energy
               </th>
               <th
                 scope="col"
-                class="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 "
+                class="px-4 py-4 text-sm font-normal text-left rtl:text-right text-gray-500 "
               >
                 Valence
               </th>
               <th
                 scope="col"
-                class="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 "
+                class="px-4 py-4 text-sm font-normal text-left rtl:text-right text-gray-500 "
               >
                 Popularity
               </th>
               <th
                 scope="col"
-                class="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 "
+                class="px-4 py-4 text-sm font-normal text-left rtl:text-right text-gray-500 "
+              >
+                Emotion
+              </th>
+              <th
+                scope="col"
+                class="px-4 py-4 text-sm font-normal text-left rtl:text-right text-gray-500 "
               >
                 Mood
+              </th>
+              <th
+                scope="col"
+                class="px-4 py-4 text-sm font-normal text-left rtl:text-right text-gray-500 "
+              >
+                Image
               </th>
             </tr>
           </thead>
@@ -131,13 +155,13 @@ function ExportTracksComponent(props) {
                   <>
                     <>
                       <tr>
-                        <td class="px-4 py-4 max-w-[20em] text-sm text-gray-500 relative">
+                        <td class="px-4 py-4 text-sm text-gray-500">
                           {index + 1}
                         </td>
-                        <td className="px-4 py-4 max-w-[20em] text-sm text-gray-500 relative">
+                        <td className="px-4 py-4 text-sm text-gray-500">
                           {item.name ? item.name : ""}
                         </td>
-                        <td className="px-4 py-4 max-w-[20em] text-sm text-gray-500 relative">
+                        <td className="px-4 py-4 text-sm text-gray-500">
                           <p class="  line-clamp-1">
                             {size(item.artists) == 0 ? (
                               <>N/A</>
@@ -154,37 +178,63 @@ function ExportTracksComponent(props) {
                             )}
                           </p>
                         </td>
-                        <td className="px-4 py-4 max-w-[20em] text-sm text-gray-500 relative">
+                        <td className="px-4 py-4 text-sm text-gray-500">
                           {item.album ? item.album.name : ""}
                         </td>
-                        <td className="px-4 py-4 max-w-[20em] text-sm text-gray-500 relative">
+                        <td className="px-4 py-4 text-sm text-gray-500">
+                          {item.album ? item.album.images[0].url : ""}
+                        </td>
+                        <td className="px-4 py-4 text-sm text-gray-500">
                           {data_user ? data_user.display_name : ""}
                         </td>
-                        <td className="px-4 py-4 max-w-[20em] text-sm text-gray-500 relative">
+                        <td className="px-4 py-4 text-sm text-gray-500">
+                          {size(data_user.images) == 0
+                            ? ""
+                            : data_user.images[1].url}
+                        </td>
+                        <td className="px-4 py-4 text-sm text-gray-500">
                           {time_range ? time_range.value : ""}
                         </td>
-                        <td className="px-4 py-4 max-w-[20em] text-sm text-gray-500 relative">
+                        <td className="px-4 py-4 text-sm text-gray-500">
                           {item.external_urls ? item.external_urls.spotify : ""}
                         </td>
-                        <td className="px-4 py-4 max-w-[20em] text-sm text-gray-500 relative">
+                        <td className="px-4 py-4 text-sm text-gray-500">
                           {audio_features[index].danceability}
                         </td>
-                        <td className="px-4 py-4 max-w-[20em] text-sm text-gray-500 relative">
+                        <td className="px-4 py-4 text-sm text-gray-500">
                           {audio_features[index].energy}
                         </td>
-                        <td className="px-4 py-4 max-w-[20em] text-sm text-gray-500 relative">
+                        <td className="px-4 py-4 text-sm text-gray-500">
                           {audio_features[index].valence}
                         </td>
-                        <td className="px-4 py-4 max-w-[20em] text-sm text-gray-500 relative">
+                        <td className="px-4 py-4 text-sm text-gray-500">
                           {item.popularity ? item.popularity : 0}
                         </td>
-                        <td className="px-4 py-4 max-w-[20em] text-sm text-gray-500 relative">
+                        <td className="px-4 py-4 text-sm text-gray-500">
                           {
                             getMoodTrack(
                               audio_features[index].energy,
                               audio_features[index].valence
                             ).emotion
                           }
+                        </td>
+                        <td className="px-4 py-4 text-sm text-gray-500">
+                          {
+                            getMoodTrack(
+                              audio_features[index].energy,
+                              audio_features[index].valence
+                            ).mood
+                          }
+                        </td>
+                        <td className="px-4 py-4 text-sm text-gray-500 w-40 ">
+                          <p className="">
+                            {
+                              getMoodTrack(
+                                audio_features[index].energy,
+                                audio_features[index].valence
+                              ).img
+                            }
+                          </p>
                         </td>
                       </tr>
                     </>
